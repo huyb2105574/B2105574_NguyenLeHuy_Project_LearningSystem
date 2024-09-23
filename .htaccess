@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteBase /
+
+# Routes to index.php
+RewriteRule ^([^/]*)/?$ index.php?controller=$1 [L]
+RewriteRule ^([^/]*)/([^/]*)/?$ index.php?controller=$1&action=$2 [L]
+RewriteRule ^create_user$ index.php?controller=UserController&action=createUser [L]
