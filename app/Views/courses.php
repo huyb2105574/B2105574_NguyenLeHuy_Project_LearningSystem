@@ -1,40 +1,29 @@
-
-<?php if ($_SESSION['role'] === 'admin'): ?>
-    <a href="/courses/create" class="btn btn-primary">Tạo khóa học</a>
+<?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
+<a href="/courses/create" class="btn btn-primary">Tạo khóa học</a>
 <?php endif; ?>
-
 <h1>Danh sách khóa học</h1>
-<p>Danh sách các khóa học hiện có.</p>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tên khóa học</th>
-            <th>Mô tả</th>
-            <th>Giảng viên</th>
-            <th>Ngày bắt đầu</th>
-            <th>Ngày kết thúc</th>
-            <?php if ($_SESSION['role'] === 'admin'): ?>
-                <th>Thao tác</th>
+<div class="row">
+    <?php foreach ($courses as $course): ?>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <img src="uploads/<?php echo htmlspecialchars($course['image_path']); ?>" class="card-img-top"
+                alt="Hình minh họa cho khóa học" style="height: 200px; object-fit: cover;">
+            <div class="card-body">
+                <h5 class="card-title"><?php echo htmlspecialchars($course['course_name']); ?></h5>
+                <p class="card-text">Giảng viên: <?php echo htmlspecialchars($course['lecturer_name']); ?></p>
+                <p class="card-text">Ngày bắt đầu: <?php echo htmlspecialchars($course['start_date']); ?></p>
+                <p class="card-text">Ngày kết thúc: <?php echo htmlspecialchars($course['end_date']); ?></p>
+                <p class="card-text">Mô tả:<?php echo htmlspecialchars($course['description']); ?></p>
+            </div>
+            <?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
+            <div class="card-footer">
+                <a href="/courses/edit/<?php echo htmlspecialchars($course['course_id']); ?>"
+                    class="btn btn-warning">Sửa</a>
+                <a href="/courses/delete/<?php echo htmlspecialchars($course['course_id']); ?>" class="btn btn-danger"
+                    onclick="return confirm('Bạn có chắc chắn muốn xóa khóa học này?');">Xóa</a>
+            </div>
             <?php endif; ?>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($courses as $course): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($course['course_id']); ?></td>
-                <td><?php echo htmlspecialchars($course['course_name']); ?></td>
-                <td><?php echo htmlspecialchars($course['description']); ?></td>
-                <td><?php echo htmlspecialchars($course['lecturer_name']); ?></td>
-                <td><?php echo htmlspecialchars($course['start_date']); ?></td>
-                <td><?php echo htmlspecialchars($course['end_date']); ?></td>
-                <?php if ($_SESSION['role'] === 'admin'): ?>
-                    <td>
-                        <a href="/courses/edit/<?php echo htmlspecialchars($course['course_id']); ?>" class="btn btn-warning">Sửa</a>
-                        <a href="/courses/delete/<?php echo htmlspecialchars($course['course_id']); ?>" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa khóa học này?');">Xóa</a>
-                    </td>
-                <?php endif; ?>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+        </div>
+    </div>
+    <?php endforeach; ?>
+</div>

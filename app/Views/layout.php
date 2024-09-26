@@ -20,6 +20,12 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
+                        <!-- Hiển thị nút tạo tài khoản nếu người dùng là admin -->
+                        <?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/create_user">Tạo Tài Khoản</a>
+                        </li>
+                        <?php endif; ?>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/home">Trang Chủ</a>
                         </li>
@@ -29,14 +35,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/profile">Hồ Sơ</a>
                         </li>
-                        <?php if (isset($_SESSION['full_name'])): ?>
-                            <li class="nav-item">
-                                <span class="nav-link text-white">Chào,
-                                    <?php echo htmlspecialchars($_SESSION['full_name']); ?>!</span>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="/logout">Đăng Xuất</a>
-                            </li>
+                        <?php if (isset($userData['full_name'])): ?>
+                        <li class="nav-item">
+                            <span class="nav-link text-white">Chào,
+                                <?php echo htmlspecialchars($userData['full_name']); ?>!</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/logout">Đăng Xuất</a>
+                        </li>
                         <?php endif; ?>
                     </ul>
                 </div>
@@ -60,6 +66,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 
 </html>

@@ -1,33 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create User</title>
-</head>
-<body>
-    <h1>Create New User</h1>
-    <form action="/create_user" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" required>
-        <br>
-        <label for="full_name">Full Name:</label>
-        <input type="text" name="full_name" id="full_name" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" required>
-        <br>
-        <label for="role">Role:</label>
-        <select name="role" id="role" required>
-            <option value="admin">Admin</option>
-            <option value="lecturer">Lecturer</option>
-            <option value="student">Student</option>
-        </select>
-        <br>
-        <button type="submit">Create User</button>
-    </form>
-</body>
-</html>
+<form action="/create_user" method="POST">
+    <label for="username">Tên đăng nhập:</label>
+    <input type="text" id="username" name="username" required><br>
+
+    <label for="password">Mật khẩu:</label>
+    <input type="password" id="password" name="password" required><br>
+
+    <label for="full_name">Họ và tên:</label>
+    <input type="text" id="full_name" name="full_name"><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email"><br>
+
+    <label for="role">Vai trò:</label>
+    <select id="role" name="role">
+        <option value="admin">Admin</option>
+        <option value="lecturer">Lecturer</option>
+        <option value="student">Student</option>
+    </select><br>
+
+    <button type="submit">Tạo tài khoản</button>
+</form>

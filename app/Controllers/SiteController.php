@@ -22,24 +22,36 @@ class SiteController
 
     public function home()
     {
-        $content = $this->renderView('home.php');
-        $this->renderLayout($content);
+        $userData = $this->getUserData();
+        $content = $this->renderView('home.php', ['userData' => $userData]);
+        $this->renderLayout($content, $userData); // Truyền $userData
     }
 
     public function courses()
     {
+        $userData = $this->getUserData();
         $courses = $this->courseModel->getAllCourses();
-        $content = $this->renderView('courses.php', ['courses' => $courses]);
-        $this->renderLayout($content);
+        $content = $this->renderView('courses.php', ['courses' => $courses, 'userData' => $userData]);
+        $this->renderLayout($content, $userData); // Truyền $userData
     }
 
     public function profile()
     {
-        $content = $this->renderView('profile.php');
-        $this->renderLayout($content);
+        if (!isset($_SESSION['user'])) {
+            echo "Bạn cần đăng nhập để xem hồ sơ.";
+            return;
+        }
+        $userData = $this->getUserData();
+        $content = $this->renderView('profile.php', ['userData' => $userData]);
+        $this->renderLayout($content, $userData); // Truyền $userData
     }
 
-    private function renderView($view, $data = [])
+
+    public function getUserData()
+    {
+        return $_SESSION['user'] ?? null;
+    }
+    public function renderView($view, $data = [])
     {
         // Tạo biến $data cho view
         extract($data);
@@ -49,14 +61,11 @@ class SiteController
         return ob_get_clean();
     }
 
-    private function renderLayout($content)
+    public function renderLayout($content, $userData = [])
     {
         $layoutPath = __DIR__ . '/../Views/layout.php';
-        
-        if (file_exists($layoutPath)) {
-            include $layoutPath;
-        } else {
-            echo "Layout file not found!";
-        }
+
+        // Truyền biến $userData cho layout
+        include $layoutPath;
     }
 }

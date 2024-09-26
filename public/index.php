@@ -5,7 +5,6 @@ require '../vendor/autoload.php';
 use App\Controllers\SiteController;
 use App\Controllers\UserController;
 use App\Controllers\CourseController;
-
 // Tạo phiên làm việc
 session_start();
 
@@ -33,10 +32,6 @@ switch ($request) {
         $courseController->store();
         break;
 
-    case '/profile':
-        $siteController->profile();
-        break;
-
     case '/login':
         $userController->login();
         break;
@@ -45,7 +40,12 @@ switch ($request) {
         session_destroy();  // Xử lý đăng xuất
         header('Location: /login');
         exit();
-
+    case '/profile':
+        $userController->showProfile();
+        break;
+    case '/create_user':
+        $userController->createUser();
+        break;
     default:
         echo "Page not found!";
         break;

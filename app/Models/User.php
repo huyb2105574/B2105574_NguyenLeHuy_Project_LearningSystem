@@ -4,16 +4,19 @@ namespace App\Models;
 
 use PDO;
 
-class User {
+class User
+{
     private $conn;
     private $table = 'users';
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
     // Lấy thông tin người dùng theo ID
-    public function getUserById($id) {
+    public function getUserById($id)
+    {
         $query = "SELECT * FROM " . $this->table . " WHERE user_id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
@@ -23,22 +26,24 @@ class User {
     }
 
     // Lấy thông tin người dùng theo username
-    public function getUserByUserName($username) {
+    public function getUserByUserName($username)
+    {
         try {
             $query = "SELECT * FROM " . $this->table . " WHERE username = :username";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
-    
+
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             echo 'Error: ' . $e->getMessage();
             return false;
         }
     }
-    
+
     // Tạo người dùng mới
-    public function createUser($username, $password, $full_name, $email, $role) {
+    public function createUser($username, $password, $full_name, $email, $role)
+    {
         $query = "INSERT INTO " . $this->table . " (username, password, full_name, email, role) VALUES (:username, :password, :full_name, :email, :role)";
         $stmt = $this->conn->prepare($query);
 

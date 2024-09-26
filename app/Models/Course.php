@@ -8,27 +8,42 @@ use PDO;
 class Course
 {
     private $conn;
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
     // Lấy tất cả các khóa học
-    public function getAllCourses()
+    public function createCourse($course_name, $description, $lecturer_id, $start_date, $end_date, $image_path)
     {
-        $query = "
-            SELECT c.course_id, c.course_name, c.description, c.start_date, c.end_date, u.full_name as lecturer_name
-            FROM courses c
-            LEFT JOIN users u ON c.lecturer_id = u.user_id
-            ";
-        try {
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-        } catch (\Exception $e) {
-            return []; // Hoặc return false nếu bạn muốn xử lý lỗi khác
-        }
+        $query = "INSERT INTO courses (course_name, description, lecturer_id, start_date, end_date, image_path) 
+                  VALUES (:course_name, :description, :lecturer_id, :start_date, :end_date, :image_path)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':course_name', $course_name);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':lecturer_id', $lecturer_id);
+        $stmt->bindParam(
+            ':start_date',
+            $start_date
+        );
+        $stmt->bindParam(':end_date', $end_date);
+        $stmt->bindParam(
+            ':image_path',
+            $image_path
+        );
+        return $stmt->execute();
     }
 
+    // Lấy danh sách khóa học
+    public function getAllCourses()
+    {
+        $query = "SELECT courses.*, users.full_name AS lecturer_name 
+              FROM courses 
+              LEFT JOIN users ON courses.lecturer_id = users.user_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     // Lấy khóa học theo ID
     public function getCourseById($courseId)
     {
@@ -36,22 +51,6 @@ class Course
         $stmt->bindParam(':course_id', $courseId);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    // Tạo khóa học mới
-    public function createCourse($courseName, $description, $lecturerId, $startDate, $endDate)
-    {
-        $stmt = $this->conn->prepare("
-            INSERT INTO courses (course_name, description, lecturer_id, start_date, end_date) 
-            VALUES (:course_name, :description, :lecturer_id, :start_date, :end_date)
-        ");
-        $stmt->bindParam(':course_name', $courseName);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':lecturer_id', $lecturerId);
-        $stmt->bindParam(':start_date', $startDate);
-        $stmt->bindParam(':end_date', $endDate);
-
-        return $stmt->execute();
     }
 
     // Xóa khóa học theo ID
