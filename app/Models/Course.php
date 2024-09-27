@@ -60,4 +60,23 @@ class Course
         $stmt->bindParam(':course_id', $courseId);
         return $stmt->execute();
     }
+
+    public function updateCourse($course_id, $courseData)
+    {
+        $stmt = $this->conn->prepare("
+        UPDATE courses
+        SET course_name = :course_name, description = :description, 
+            lecturer_id = :lecturer_id, start_date = :start_date, end_date = :end_date
+        WHERE course_id = :course_id
+    ");
+        // Bind parameters
+        $stmt->bindParam(':course_name', $courseData['course_name']);
+        $stmt->bindParam(':description', $courseData['description']);
+        $stmt->bindParam(':lecturer_id', $courseData['lecturer_id']); // Kiểm tra trường này có tồn tại trong $courseData
+        $stmt->bindParam(':start_date', $courseData['start_date']);
+        $stmt->bindParam(':end_date', $courseData['end_date']);
+        $stmt->bindParam(':course_id', $course_id);
+
+        return $stmt->execute();
+    }
 }

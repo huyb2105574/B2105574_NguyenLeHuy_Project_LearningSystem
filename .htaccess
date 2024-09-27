@@ -1,7 +1,9 @@
 RewriteEngine On
 RewriteBase /
 
+# Debug - In ra URL sau khi rewrite
+RewriteRule .* - [E=MYURL:%{REQUEST_URI},L]
+
 # Routes to index.php
-RewriteRule ^([^/]*)/?$ index.php?controller=$1 [L]
-RewriteRule ^([^/]*)/([^/]*)/?$ index.php?controller=$1&action=$2 [L]
-RewriteRule ^create_user$ index.php?controller=UserController&action=createUser [L]
+RewriteRule ^([^/]+)/?$ index.php?controller=$1 [QSA,L]
+RewriteRule ^([^/]+)/([^/]+)/?$ index.php?controller=$1&action=$2 [QSA,L]

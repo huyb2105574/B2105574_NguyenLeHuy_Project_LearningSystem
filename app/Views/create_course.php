@@ -1,4 +1,4 @@
-<form action="/create_course" method="POST" enctype="multipart/form-data">
+<form action="/courses/store" method="POST" enctype="multipart/form-data">
     <label for="course_name">Tên khóa học:</label>
     <input type="text" id="course_name" name="course_name" required><br>
 

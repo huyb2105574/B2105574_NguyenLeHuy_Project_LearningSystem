@@ -14,13 +14,14 @@
                 <p class="card-text">Ngày bắt đầu: <?php echo htmlspecialchars($course['start_date']); ?></p>
                 <p class="card-text">Ngày kết thúc: <?php echo htmlspecialchars($course['end_date']); ?></p>
                 <p class="card-text">Mô tả:<?php echo htmlspecialchars($course['description']); ?></p>
+                <a href="/courses/show/<?php echo $course['course_id']; ?>" class="btn btn-info">Xem chi tiết</a>
             </div>
             <?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
             <div class="card-footer">
-                <a href="/courses/edit/<?php echo htmlspecialchars($course['course_id']); ?>"
-                    class="btn btn-warning">Sửa</a>
-                <a href="/courses/delete/<?php echo htmlspecialchars($course['course_id']); ?>" class="btn btn-danger"
-                    onclick="return confirm('Bạn có chắc chắn muốn xóa khóa học này?');">Xóa</a>
+                <a href="/courses/edit/<?php echo $course['course_id']; ?>">Chỉnh sửa</a>
+                <a href="/courses/delete/<?php echo $course['course_id']; ?>"
+                    onclick="return confirm('Bạn có chắc muốn xóa khóa học này?');">Xóa</a>
+
             </div>
             <?php endif; ?>
         </div>
