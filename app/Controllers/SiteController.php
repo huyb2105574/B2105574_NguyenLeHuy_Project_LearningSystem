@@ -46,6 +46,8 @@ class SiteController
         $this->renderLayout($content, $userData); // Truyền $userData
     }
 
+    public function account() {}
+
 
     public function getUserData()
     {

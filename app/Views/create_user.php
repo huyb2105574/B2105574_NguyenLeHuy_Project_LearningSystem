@@ -1,4 +1,4 @@
-<form action="/create_user" method="POST">
+<form action="/user/create" method="POST">
     <label for="username">Tên đăng nhập:</label>
     <input type="text" id="username" name="username" required><br>
 

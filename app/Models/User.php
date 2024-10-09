@@ -62,4 +62,40 @@ class User
         }
         return false;
     }
+    public function getAllUsers()
+    {
+        $query = "SELECT * FROM " . $this->table;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function deleteUser($id)
+    {
+        $query = "DELETE FROM users WHERE user_id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            print_r($stmt->errorInfo());  // Hiển thị lỗi nếu có
+            return false;
+        }
+    }
+
+    public function updateUser($id, $username, $full_name, $email, $role)
+    {
+        $query = "UPDATE " . $this->table . " 
+              SET username = :username, full_name = :full_name, email = :email, role = :role 
+              WHERE user_id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':full_name', $full_name);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':role', $role);
+        $stmt->bindParam(':id', $id);
+
+        return $stmt->execute();
+    }
 }

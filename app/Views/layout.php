@@ -23,7 +23,7 @@
                         <!-- Hiển thị nút tạo tài khoản nếu người dùng là admin -->
                         <?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="/create_user">Tạo Tài Khoản</a>
+                            <a class="nav-link text-white" href="/user">Quản lý tài khoản</a>
                         </li>
                         <?php endif; ?>
                         <li class="nav-item">

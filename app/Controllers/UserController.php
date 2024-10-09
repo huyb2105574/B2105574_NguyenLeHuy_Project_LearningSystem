@@ -66,7 +66,7 @@ class UserController
             $role = $_POST['role'];
 
             if ($this->userModel->createUser($username, $password, $full_name, $email, $role)) {
-                echo "User created successfully!";
+                header('Location: /user/list');
             } else {
                 echo "Error creating user!";
             }
@@ -74,6 +74,30 @@ class UserController
 
         require_once __DIR__ . '/../Views/create_user.php';
     }
+
+    public function listUsers()
+    {
+        $users = $this->userModel->getAllUsers();
+        require_once __DIR__ . '/../Views/list_users.php';
+    }
+
+    public function deleteUser($id = null)
+    {
+        // Kiểm tra xem ID có tồn tại không
+        if ($id === null) {
+            echo "ID không tồn tại.";
+            return;
+        }
+
+        // Gọi model để xóa người dùng
+        if ($this->userModel->deleteUser($id)) {
+            header("Location: /user/list");
+            exit; // Kết thúc xử lý sau khi chuyển hướng
+        } else {
+            echo "Xóa người dùng thất bại.";
+        }
+    }
+
 
     public function showProfile()
     {
@@ -86,6 +110,28 @@ class UserController
             $siteController->renderLayout($content);
         } else {
             echo "Bạn cần đăng nhập để xem hồ sơ.";
+        }
+    }
+
+    public function editUser($id)
+    {
+        // Kiểm tra nếu người dùng submit form
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['username'];
+            $full_name = $_POST['full_name'];
+            $email = $_POST['email'];
+            $role = $_POST['role'];
+
+            // Gọi hàm cập nhật người dùng
+            if ($this->userModel->updateUser($id, $username, $full_name, $email, $role)) {
+                header('Location: /user/list');
+            } else {
+                echo "Cập nhật thất bại!";
+            }
+        } else {
+            // Lấy thông tin người dùng cần chỉnh sửa
+            $user = $this->userModel->getUserById($id);
+            require_once __DIR__ . '/../Views/edit_user.php';
         }
     }
 }

@@ -66,7 +66,19 @@ switch ($controller) {
     case 'create_user':
         $userController->createUser();
         break;
-
+    case 'user':
+        if ($action == 'list' || $action == 'index') {
+            $userController->listUsers();
+        } elseif ($action == 'create') {
+            $userController->createUser();
+        } elseif ($action == 'edit' && $id) {
+            $userController->editUser($id);
+        } elseif ($action == 'delete' && $id) {
+            $userController->deleteUser($id);
+        } else {
+            echo "Action không hợp lệ trong User Controller!";
+        }
+        break;
     default:
         echo "Page not found!";
         break;

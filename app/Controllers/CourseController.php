@@ -3,18 +3,21 @@
 namespace App\Controllers;
 
 use App\Models\Course;
+use App\Models\Lecture;
 use App\Config\Database;
 
 class CourseController
 {
     private $db;
     private $courseModel;
+    private $lectureModel;
 
     public function __construct()
     {
         $database = new Database();
         $this->db = $database->getConnection();
         $this->courseModel = new Course($this->db);
+        $this->lectureModel = new Lecture($this->db);
     }
 
     // Hiển thị form tạo khóa học
@@ -124,7 +127,7 @@ class CourseController
             $courseData = [
                 'course_name' => $_POST['course_name'],
                 'description' => $_POST['description'],
-                'lecturer_id' => $_POST['lecturer_id'], // Đảm bảo có trường này trong form
+                'lecturer_id' => $_POST['lecturer_id'],
                 'start_date' => $_POST['start_date'],
                 'end_date' => $_POST['end_date'],
             ];
@@ -156,17 +159,16 @@ class CourseController
     {
         // Lấy thông tin khóa học theo ID
         $course = $this->courseModel->getCourseById($course_id);
-
+        $lectures = $this->lectureModel->getAllLecturesByCourse($course_id);
         // Kiểm tra nếu khóa học không tồn tại
         if (!$course) {
             die('Khóa học không tồn tại.');
         }
 
         // Trả về view hiển thị chi tiết khóa học
-        $content = $this->renderView('course_detail.php', ['course' => $course]);
+        $content = $this->renderView('course_detail.php', ['course' => $course, 'lectures' => $lectures]);
         $this->renderLayout($content);
     }
-
     // Render view
     private function renderView($view, $data = [])
     {
