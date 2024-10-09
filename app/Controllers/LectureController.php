@@ -96,4 +96,17 @@ class LectureController
             echo "Bài giảng không tồn tại.";
         }
     }
+    private function renderView($view, $data = [])
+    {
+        extract($data);
+        ob_start();
+        include __DIR__ . '/../Views/' . $view;
+        return ob_get_clean();
+    }
+
+    // Render layout
+    private function renderLayout($content)
+    {
+        include __DIR__ . '/../Views/layout.php';
+    }
 }

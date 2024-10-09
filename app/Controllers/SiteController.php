@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Course;
 
+
 class SiteController
 {
     private $courseModel;
@@ -43,11 +44,8 @@ class SiteController
         }
         $userData = $this->getUserData();
         $content = $this->renderView('profile.php', ['userData' => $userData]);
-        $this->renderLayout($content, $userData); // Truyền $userData
+        $this->renderLayout($content, $userData);
     }
-
-    public function account() {}
-
 
     public function getUserData()
     {

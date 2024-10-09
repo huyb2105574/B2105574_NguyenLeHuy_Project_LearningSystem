@@ -30,8 +30,8 @@ class CourseController
         }
 
         // Nếu là Admin, hiển thị trang tạo khóa học
-        $content = $this->renderView('Course/create_course.php');
-        $this->renderLayout($content);
+        $content = $this->renderView('Course/create_course.php', ['userData' => $userData]);
+        $this->renderLayout($content, $userData);
     }
 
     // Lưu khóa học mới
@@ -108,6 +108,12 @@ class CourseController
     // Hiển thị form chỉnh sửa khóa học
     public function edit($course_id)
     {
+        $userData = $_SESSION['user'] ?? null;
+        if (!$userData) {
+            echo "Bạn cần đăng nhập để truy cập trang này.";
+            return;
+        }
+
         // Lấy thông tin khóa học
         $course = $this->courseModel->getCourseById($course_id);
 
@@ -115,10 +121,11 @@ class CourseController
             die('Khóa học không tồn tại.');
         }
 
-        // Trả về view để hiển thị form chỉnh sửa
-        $content = $this->renderView('Course/edit_course.php', ['course' => $course]);
-        $this->renderLayout($content);
+        // Trả về view để hiển thị form chỉnh sửa và truyền userData vào view
+        $content = $this->renderView('Course/edit_course.php', ['course' => $course, 'userData' => $userData]);
+        $this->renderLayout($content, $userData);
     }
+
 
     // Cập nhật khóa học
     public function update($course_id)
@@ -157,7 +164,7 @@ class CourseController
 
     public function show($course_id)
     {
-        // Lấy thông tin khóa học theo ID
+        $userData = $_SESSION['user'] ?? null;
         $course = $this->courseModel->getCourseById($course_id);
         $lectures = $this->lectureModel->getAllLecturesByCourse($course_id);
         // Kiểm tra nếu khóa học không tồn tại
@@ -166,10 +173,10 @@ class CourseController
         }
 
         // Trả về view hiển thị chi tiết khóa học
-        $content = $this->renderView('Course/course_detail.php', ['course' => $course, 'lectures' => $lectures]);
-        $this->renderLayout($content);
+        $content = $this->renderView('Course/course_detail.php', ['userData' => $userData, 'course' => $course, 'lectures' => $lectures]);
+        $this->renderLayout($content, $userData);
     }
-    // Render view
+
     private function renderView($view, $data = [])
     {
         extract($data);
@@ -178,8 +185,8 @@ class CourseController
         return ob_get_clean();
     }
 
-    // Render layout
-    private function renderLayout($content)
+
+    private function renderLayout($content, $userData = null)
     {
         include __DIR__ . '/../Views/layout.php';
     }

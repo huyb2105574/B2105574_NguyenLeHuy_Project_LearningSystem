@@ -1,19 +1,39 @@
-<form method="POST" action="/courses/update/<?php echo $course['course_id']; ?>" enctype="multipart/form-data">
-    <input type="hidden" name="course_id" value="<?php echo $course['course_id']; ?>">
-    <label for="course_name">Tên khóa học:</label>
-    <input type="text" name="course_name" value="<?php echo htmlspecialchars($course['course_name']); ?>" required>
+<div class="container mt-5">
+    <h2>Chỉnh Sửa Khóa Học</h2>
+    <form method="POST" action="/courses/update/<?php echo $course['course_id']; ?>" enctype="multipart/form-data">
+        <input type="hidden" name="course_id" value="<?php echo $course['course_id']; ?>">
 
-    <label for="description">Mô tả:</label>
-    <textarea name="description" required><?php echo htmlspecialchars($course['description']); ?></textarea>
+        <div class="form-group">
+            <label for="course_name">Tên Khóa Học:</label>
+            <input type="text" class="form-control" name="course_name"
+                value="<?php echo htmlspecialchars($course['course_name']); ?>" required>
+        </div>
 
-    <label for="lecturer_id">Giảng viên:</label>
-    <input type="text" name="lecturer_id" value="<?php echo htmlspecialchars($course['lecturer_id']); ?>" required>
+        <div class="form-group">
+            <label for="description">Mô Tả:</label>
+            <textarea class="form-control" name="description"
+                required><?php echo htmlspecialchars($course['description']); ?></textarea>
+        </div>
 
-    <label for="start_date">Ngày bắt đầu:</label>
-    <input type="date" name="start_date" value="<?php echo htmlspecialchars($course['start_date']); ?>" required>
+        <div class="form-group">
+            <label for="lecturer_id">Giảng Viên:</label>
+            <input type="text" class="form-control" name="lecturer_id"
+                value="<?php echo htmlspecialchars($course['lecturer_id']); ?>" required>
+        </div>
 
-    <label for="end_date">Ngày kết thúc:</label>
-    <input type="date" name="end_date" value="<?php echo htmlspecialchars($course['end_date']); ?>" required>
+        <div class="form-group">
+            <label for="start_date">Ngày Bắt Đầu:</label>
+            <input type="date" class="form-control" name="start_date"
+                value="<?php echo htmlspecialchars($course['start_date']); ?>" required>
+        </div>
 
-    <button type="submit">Lưu thay đổi</button>
-</form>
+        <div class="form-group">
+            <label for="end_date">Ngày Kết Thúc:</label>
+            <input type="date" class="form-control" name="end_date"
+                value="<?php echo htmlspecialchars($course['end_date']); ?>" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+        <a href="/courses" class="btn btn-secondary">Quay Lại</a>
+    </form>
+</div>
