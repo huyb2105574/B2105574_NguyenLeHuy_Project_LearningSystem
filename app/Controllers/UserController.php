@@ -46,7 +46,7 @@ class UserController
 
         // Hiển thị form đăng nhập nếu không phải POST
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            require_once __DIR__ . '/../Views/login.php';  // Hiển thị form login
+            require_once __DIR__ . '/../Views/User/login.php';  // Hiển thị form login
         }
     }
 
@@ -72,13 +72,13 @@ class UserController
             }
         }
 
-        require_once __DIR__ . '/../Views/create_user.php';
+        require_once __DIR__ . '/../Views/User/create_user.php';
     }
 
     public function listUsers()
     {
         $users = $this->userModel->getAllUsers();
-        require_once __DIR__ . '/../Views/list_users.php';
+        require_once __DIR__ . '/../Views/User/list_users.php';
     }
 
     public function deleteUser($id = null)
@@ -131,7 +131,7 @@ class UserController
         } else {
             // Lấy thông tin người dùng cần chỉnh sửa
             $user = $this->userModel->getUserById($id);
-            require_once __DIR__ . '/../Views/edit_user.php';
+            require_once __DIR__ . '/../Views/User/edit_user.php';
         }
     }
 }

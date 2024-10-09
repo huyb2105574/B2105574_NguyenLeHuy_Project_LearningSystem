@@ -20,10 +20,6 @@ class LectureController
     public function showAllLectures($courseId)
     {
         $lectures = $this->lectureModel->getAllLecturesByCourse($courseId);
-        if ($lectures) {
-            include __DIR__ . '../Views/lectures.php';
-            echo "Không có bài giảng nào cho khóa học này.";
-        }
     }
 
     public function addLecture($courseId)
@@ -65,7 +61,7 @@ class LectureController
             exit();
         }
 
-        include __DIR__ . '/../Views/add_lecture.php';
+        include __DIR__ . '/../Views/Lecture/add_lecture.php';
     }
 
 
@@ -81,7 +77,7 @@ class LectureController
             $this->lectureModel->updateLecture($lectureId, $title, $content, $filePath);
             header("Location: /courses/show/" . $lecture['course_id']);
         }
-        include __DIR__ . '/../Views/edit_lecture.php';
+        include __DIR__ . '/../Views/Lecture/edit_lecture.php';
     }
 
     public function deleteLecture($lectureId)
@@ -95,7 +91,7 @@ class LectureController
         $lecture = $this->lectureModel->getLectureById($lectureId);
 
         if ($lecture) {
-            require __DIR__ . '/../Views/show_lecture.php';
+            require __DIR__ . '/../Views/Lecture/show_lecture.php';
         } else {
             echo "Bài giảng không tồn tại.";
         }

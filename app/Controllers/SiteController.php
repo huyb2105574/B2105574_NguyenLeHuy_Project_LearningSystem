@@ -31,7 +31,7 @@ class SiteController
     {
         $userData = $this->getUserData();
         $courses = $this->courseModel->getAllCourses();
-        $content = $this->renderView('courses.php', ['courses' => $courses, 'userData' => $userData]);
+        $content = $this->renderView('Course/courses.php', ['courses' => $courses, 'userData' => $userData]);
         $this->renderLayout($content, $userData); // Truyền $userData
     }
 

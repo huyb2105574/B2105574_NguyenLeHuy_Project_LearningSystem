@@ -30,7 +30,7 @@ class CourseController
         }
 
         // Nếu là Admin, hiển thị trang tạo khóa học
-        $content = $this->renderView('create_course.php');
+        $content = $this->renderView('Course/create_course.php');
         $this->renderLayout($content);
     }
 
@@ -116,7 +116,7 @@ class CourseController
         }
 
         // Trả về view để hiển thị form chỉnh sửa
-        $content = $this->renderView('edit_course.php', ['course' => $course]);
+        $content = $this->renderView('Course/edit_course.php', ['course' => $course]);
         $this->renderLayout($content);
     }
 
@@ -166,7 +166,7 @@ class CourseController
         }
 
         // Trả về view hiển thị chi tiết khóa học
-        $content = $this->renderView('course_detail.php', ['course' => $course, 'lectures' => $lectures]);
+        $content = $this->renderView('Course/course_detail.php', ['course' => $course, 'lectures' => $lectures]);
         $this->renderLayout($content);
     }
     // Render view
