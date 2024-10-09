@@ -22,10 +22,14 @@ class Lecture
 
     public function getLectureById($lectureId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM lectures WHERE lecture_id = ?");
-        $stmt->execute([$lectureId]);
+        $stmt = $this->conn->prepare("SELECT * FROM lectures WHERE lecture_id = :lectureId");
+        $stmt->bindParam(':lectureId', $lectureId, PDO::PARAM_INT);
+        $stmt->execute();
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+
 
     public function addLecture($courseId, $title, $content, $filePath)
     {

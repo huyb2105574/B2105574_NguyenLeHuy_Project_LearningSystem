@@ -135,7 +135,7 @@ class CourseController
             // Kiểm tra xem có upload ảnh mới không
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
                 $image_name = time() . '_' . $_FILES['image']['name'];
-                move_uploaded_file($_FILES['image']['tmp_name'], '../src/uploads/' . $image_name);
+                move_uploaded_file($_FILES['image']['tmp_name'], $image_name);
                 $courseData['image_path'] = $image_name; // Thêm đường dẫn ảnh vào mảng
             }
 

@@ -21,9 +21,7 @@ class LectureController
     {
         $lectures = $this->lectureModel->getAllLecturesByCourse($courseId);
         if ($lectures) {
-            // Hiển thị danh sách bài giảng
-            include __DIR__ . '../Views/lectures.php'; // Tệp view cho danh sách bài giảng
-        } else {
+            include __DIR__ . '../Views/lectures.php';
             echo "Không có bài giảng nào cho khóa học này.";
         }
     }
@@ -31,36 +29,59 @@ class LectureController
     public function addLecture($courseId)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Validate input data and process file upload
             $title = $_POST['title'];
             $content = $_POST['content'];
-            $filePath = ''; // Handle file upload and set the path
+            $filePath = '';
 
-            // Insert lecture into the database
+            if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
+                $targetDirectory = __DIR__ . '/../../public/uploads/';
+
+                // Tạo thư mục nếu chưa có
+                if (!is_dir($targetDirectory)) {
+                    mkdir($targetDirectory, 0777, true);
+                }
+
+                $fileName = basename($_FILES['file']['name']);
+                $filePath = $fileName;
+
+                // Kiểm tra kích thước file
+                if ($_FILES['file']['size'] > 5000000) {
+                    echo "File quá lớn.";
+                    return;
+                }
+
+                // Di chuyển file
+                if (move_uploaded_file($_FILES['file']['tmp_name'], $targetDirectory . $fileName)) {
+                    echo "Tải file lên thành công!";
+                } else {
+                    echo "Có lỗi khi tải lên tệp.";
+                    return;
+                }
+            }
+
+            // Thêm bài giảng vào cơ sở dữ liệu
             $this->lectureModel->addLecture($courseId, $title, $content, $filePath);
             header("Location: /courses/show/$courseId");
+            exit();
         }
-        // Render add lecture form
-        require 'Views/add_lecture.php';
+
+        include __DIR__ . '/../Views/add_lecture.php';
     }
+
+
 
     public function editLecture($lectureId)
     {
-        // Fetch lecture details
         $lecture = $this->lectureModel->getLectureById($lectureId);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Validate input data and process file upload
             $title = $_POST['title'];
             $content = $_POST['content'];
-            $filePath = ''; // Handle file upload if necessary
-
-            // Update lecture in the database
+            $filePath = '';
             $this->lectureModel->updateLecture($lectureId, $title, $content, $filePath);
             header("Location: /courses/show/" . $lecture['course_id']);
         }
-        // Render edit lecture form
-        require 'Views/edit_lecture.php';
+        include __DIR__ . '/../Views/edit_lecture.php';
     }
 
     public function deleteLecture($lectureId)
@@ -69,18 +90,14 @@ class LectureController
         $this->lectureModel->deleteLecture($lectureId);
         header("Location: /courses/show/" . $lecture['course_id']);
     }
-    // Render view
-    private function renderView($view, $data = [])
+    public function showLecture($lectureId)
     {
-        extract($data);
-        ob_start();
-        include __DIR__ . '/../Views/' . $view;
-        return ob_get_clean();
-    }
+        $lecture = $this->lectureModel->getLectureById($lectureId);
 
-    // Render layout
-    private function renderLayout($content)
-    {
-        include __DIR__ . '/../Views/layout.php';
+        if ($lecture) {
+            require __DIR__ . '/../Views/show_lecture.php';
+        } else {
+            echo "Bài giảng không tồn tại.";
+        }
     }
 }

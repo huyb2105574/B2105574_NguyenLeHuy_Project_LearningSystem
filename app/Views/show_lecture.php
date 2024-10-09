@@ -1,13 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Học Tập</title>
-    <link rel="stylesheet" href="/public/styles.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Chi Tiết Bài Giảng</title>
+    <!-- Liên kết với tệp CSS Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 80vh;
+            /* Chiều cao của iframe */
+            border: none;
+            /* Không viền */
+        }
+    </style>
 </head>
 
 <body>
@@ -21,7 +33,6 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
-                        <!-- Hiển thị nút tạo tài khoản nếu người dùng là admin -->
                         <?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
                             <li class="nav-item">
                                 <a class="nav-link text-white" href="/user">Quản lý tài khoản</a>
@@ -51,20 +62,25 @@
         </div>
     </header>
 
-    <main class="container mt-4">
-        <div class="content">
-            <?php echo $content; // Nội dung động 
-            ?>
+    <div class="container mt-4">
+        <h2><?php echo htmlspecialchars($lecture['title']); ?></h2>
+        <p>Nội dung: <?php echo nl2br(htmlspecialchars($lecture['content'])); ?></p>
+
+        <?php if (!empty($lecture['file_path'])): ?>
+            <h3>Tài liệu</h3>
+            <iframe class="pdf-viewer" src="/uploads/<?php echo htmlspecialchars($lecture['file_path']); ?>"
+                allowfullscreen></iframe>
+        <?php endif; ?>
+
+        <div class="mt-3">
+            <a href="/courses/show/<?php echo $lecture['course_id']; ?>" class="btn btn-secondary">Trở lại danh sách bài
+                giảng</a>
         </div>
-    </main>
+    </div>
 
-    <footer class="bg-light text-center py-3 mt-4">
-        <p>&copy; 2024 Hệ thống Quản lý Học Tập</p>
-    </footer>
-
-    <!-- Bootstrap JavaScript -->
+    <!-- Liên kết với tệp JavaScript Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 

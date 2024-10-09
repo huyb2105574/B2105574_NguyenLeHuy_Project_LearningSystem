@@ -4,6 +4,7 @@ require '../vendor/autoload.php';
 use App\Controllers\SiteController;
 use App\Controllers\UserController;
 use App\Controllers\CourseController;
+use App\Controllers\LectureController;
 
 // Tạo phiên làm việc
 session_start();
@@ -23,6 +24,7 @@ $id = isset($requestParts[2]) ? $requestParts[2] : null;
 $siteController = new SiteController();
 $userController = new UserController();
 $courseController = new CourseController();
+$lectureController = new LectureController();
 
 // Điều hướng theo controller và action
 switch ($controller) {
@@ -45,6 +47,9 @@ switch ($controller) {
             echo "Action không hợp lệ trong Courses Controller!";
         }
         break;
+    case '':
+        $siteController->home();
+        break;
 
     case 'home':
         $siteController->home();
@@ -63,9 +68,6 @@ switch ($controller) {
         $userController->showProfile();
         break;
 
-    case 'create_user':
-        $userController->createUser();
-        break;
     case 'user':
         if ($action == 'list' || $action == 'index') {
             $userController->listUsers();
@@ -75,6 +77,20 @@ switch ($controller) {
             $userController->editUser($id);
         } elseif ($action == 'delete' && $id) {
             $userController->deleteUser($id);
+        } else {
+            echo "Action không hợp lệ trong User Controller!";
+        }
+        break;
+
+    case 'lecture':
+        if ($action == 'create' && $id) {
+            $lectureController->addLecture($id);
+        } elseif ($action == 'edit' && $id) {
+            $lectureController->editLecture($id);
+        } elseif ($action == 'delete' && $id) {
+            $lectureController->deleteLecture($id);
+        } elseif ($action == 'show' && $id) {
+            $lectureController->showLecture($id);
         } else {
             echo "Action không hợp lệ trong User Controller!";
         }
