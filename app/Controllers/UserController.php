@@ -72,13 +72,17 @@ class UserController
             }
         }
 
-        require_once __DIR__ . '/../Views/User/create_user.php';
+        $userData = $this->getUserData();
+        $content = $this->renderView('User/create_user.php', ['userData' => $userData]);
+        $this->renderLayout($content, $userData);
     }
 
     public function listUsers()
     {
         $users = $this->userModel->getAllUsers();
-        require_once __DIR__ . '/../Views/User/list_users.php';
+        $userData = $this->getUserData();
+        $content = $this->renderView('User/list_users.php', ['userData' => $userData, 'users' => $users]);
+        $this->renderLayout($content, $userData);
     }
 
     public function deleteUser($id = null)
@@ -95,21 +99,6 @@ class UserController
             exit; // Kết thúc xử lý sau khi chuyển hướng
         } else {
             echo "Xóa người dùng thất bại.";
-        }
-    }
-
-
-    public function showProfile()
-    {
-        if (isset($_SESSION['user'])) {
-            $userData = $_SESSION['user'];
-
-            // Sử dụng SiteController để render view
-            $siteController = new SiteController();
-            $content = $siteController->renderView('profile.php', ['userData' => $userData]);
-            $siteController->renderLayout($content);
-        } else {
-            echo "Bạn cần đăng nhập để xem hồ sơ.";
         }
     }
 
@@ -131,7 +120,29 @@ class UserController
         } else {
             // Lấy thông tin người dùng cần chỉnh sửa
             $user = $this->userModel->getUserById($id);
-            require_once __DIR__ . '/../Views/User/edit_user.php';
+            $userData = $this->getUserData();
+            $content = $this->renderView('User/edit_user.php', ['userData' => $userData, 'user' => $user]);
+            $this->renderLayout($content, $userData);
         }
+    }
+
+    public function getUserData()
+    {
+        return $_SESSION['user'] ?? null;
+    }
+    public function renderView($view, $data = [])
+    {
+        // Tạo biến $data cho view
+        extract($data);
+
+        ob_start();
+        include __DIR__ . "/../Views/$view";
+        return ob_get_clean();
+    }
+
+    public function renderLayout($content, $userData = [])
+    {
+        $layoutPath = __DIR__ . '/../Views/layout.php';
+        include $layoutPath;
     }
 }

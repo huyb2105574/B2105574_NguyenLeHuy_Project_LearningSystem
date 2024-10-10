@@ -23,9 +23,13 @@ class SiteController
 
     public function home()
     {
+        if (!isset($_SESSION['user'])) {
+            header("Location: /login");
+            exit;
+        }
         $userData = $this->getUserData();
         $content = $this->renderView('home.php', ['userData' => $userData]);
-        $this->renderLayout($content, $userData); // Truyền $userData
+        $this->renderLayout($content, $userData);
     }
 
     public function courses()
@@ -33,7 +37,7 @@ class SiteController
         $userData = $this->getUserData();
         $courses = $this->courseModel->getAllCourses();
         $content = $this->renderView('Course/courses.php', ['courses' => $courses, 'userData' => $userData]);
-        $this->renderLayout($content, $userData); // Truyền $userData
+        $this->renderLayout($content, $userData);
     }
 
     public function profile()
@@ -43,7 +47,7 @@ class SiteController
             return;
         }
         $userData = $this->getUserData();
-        $content = $this->renderView('profile.php', ['userData' => $userData]);
+        $content = $this->renderView('User/profile.php', ['userData' => $userData]);
         $this->renderLayout($content, $userData);
     }
 
@@ -64,8 +68,6 @@ class SiteController
     public function renderLayout($content, $userData = [])
     {
         $layoutPath = __DIR__ . '/../Views/layout.php';
-
-        // Truyền biến $userData cho layout
         include $layoutPath;
     }
 }

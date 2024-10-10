@@ -1,13 +1,9 @@
-<!-- Views/profile.php -->
-
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-3 text-center">
-            <!-- Hiển thị ảnh đại diện bằng chữ cái đầu -->
             <div class="profile-avatar"
                 style="width: 100px; height: 100px; background-color: #ddd; border-radius: 50%; line-height: 100px; font-size: 36px;">
                 <?php
-                // Lấy chữ cái đầu từ tên
                 echo strtoupper(substr($userData['full_name'], 0, 1));
                 ?>
             </div>
@@ -35,21 +31,12 @@
             <div class="card mt-4">
                 <div class="card-body">
                     <h5 class="card-title">Nội dung khác</h5>
-                    <ul>
-                        <li><a href="#">Các mục blog</a></li>
-                        <li><a href="#">Bài viết diễn đàn</a></li>
-                        <li><a href="#">Các cuộc thảo luận trong diễn đàn</a></li>
-                    </ul>
                 </div>
             </div>
 
             <div class="card mt-4">
                 <div class="card-body">
                     <h5 class="card-title">Báo cáo</h5>
-                    <ul>
-                        <li><a href="#">Browser sessions</a></li>
-                        <li><a href="#">Grades overview</a></li>
-                    </ul>
                 </div>
             </div>
         </div>

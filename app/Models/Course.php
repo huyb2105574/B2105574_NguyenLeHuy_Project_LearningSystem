@@ -79,4 +79,23 @@ class Course
 
         return $stmt->execute();
     }
+    public function isStudentEnrolled($course_id, $student_id)
+    {
+        $query = "SELECT * FROM enrollments WHERE course_id = :course_id AND student_id = :student_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':course_id', $course_id);
+        $stmt->bindParam(':student_id', $student_id);
+        $stmt->execute();
+        return $stmt->fetch() ? true : false;
+    }
+
+    // Ghi danh học viên vào khóa học
+    public function enrollStudent($course_id, $student_id)
+    {
+        $query = "INSERT INTO enrollments (course_id, student_id) VALUES (:course_id, :student_id)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':course_id', $course_id);
+        $stmt->bindParam(':student_id', $student_id);
+        return $stmt->execute();
+    }
 }

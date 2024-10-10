@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="/public/styles.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 80vh;
+            border: none;
+        }
+    </style>
 </head>
 
 <body>

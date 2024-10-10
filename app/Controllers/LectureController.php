@@ -60,25 +60,58 @@ class LectureController
             header("Location: /courses/show/$courseId");
             exit();
         }
-
-        include __DIR__ . '/../Views/Lecture/add_lecture.php';
+        $userData = $this->getUserData();
+        $content = $this->renderView('Lecture/add_lecture.php', ['userData' => $userData, 'courseId' => $courseId]);
+        $this->renderLayout($content, $userData);
     }
 
 
 
     public function editLecture($lectureId)
     {
+        // Lấy thông tin bài giảng hiện tại từ cơ sở dữ liệu
         $lecture = $this->lectureModel->getLectureById($lectureId);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title = $_POST['title'];
             $content = $_POST['content'];
-            $filePath = '';
+            $filePath = $lecture['file_path'];
+
+            // Xử lý file mới nếu có
+            if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
+                $targetDirectory = __DIR__ . '/../../public/uploads/';
+
+                if (!is_dir($targetDirectory)) {
+                    mkdir($targetDirectory, 0777, true);
+                }
+
+                $fileName = basename($_FILES['file']['name']);
+                $filePath = $fileName;
+                if ($_FILES['file']['size'] > 5000000) {
+                    echo "File quá lớn.";
+                    return;
+                }
+
+                // Di chuyển file
+                if (move_uploaded_file($_FILES['file']['tmp_name'], $targetDirectory . $fileName)) {
+                    echo "Tải file lên thành công!";
+                } else {
+                    echo "Có lỗi khi tải lên tệp.";
+                    return;
+                }
+            }
+
+            // Cập nhật bài giảng vào cơ sở dữ liệu
             $this->lectureModel->updateLecture($lectureId, $title, $content, $filePath);
             header("Location: /courses/show/" . $lecture['course_id']);
+            exit();
         }
-        include __DIR__ . '/../Views/Lecture/edit_lecture.php';
+
+        $userData = $this->getUserData();
+        $content = $this->renderView('Lecture/edit_lecture.php', ['userData' => $userData, 'lecture' => $lecture]);
+        $this->renderLayout($content, $userData);
     }
+
 
     public function deleteLecture($lectureId)
     {
@@ -91,10 +124,16 @@ class LectureController
         $lecture = $this->lectureModel->getLectureById($lectureId);
 
         if ($lecture) {
-            require __DIR__ . '/../Views/Lecture/show_lecture.php';
+            $userData = $this->getUserData();
+            $content = $this->renderView('Lecture/show_lecture.php', ['userData' => $userData, 'lecture' => $lecture]);
+            $this->renderLayout($content, $userData);
         } else {
             echo "Bài giảng không tồn tại.";
         }
+    }
+    public function getUserData()
+    {
+        return $_SESSION['user'] ?? null;
     }
     private function renderView($view, $data = [])
     {
@@ -104,9 +143,9 @@ class LectureController
         return ob_get_clean();
     }
 
-    // Render layout
-    private function renderLayout($content)
+    public function renderLayout($content, $userData = [])
     {
-        include __DIR__ . '/../Views/layout.php';
+        $layoutPath = __DIR__ . '/../Views/layout.php';
+        include $layoutPath;
     }
 }

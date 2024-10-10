@@ -43,6 +43,8 @@ switch ($controller) {
             $courseController->store();
         } elseif ($action == 'update' && $id) {
             $courseController->update($id);
+        } else if ($action == 'enroll' && $id) {
+            $courseController->enroll($id);
         } else {
             echo "Action không hợp lệ trong Courses Controller!";
         }
@@ -65,7 +67,7 @@ switch ($controller) {
         exit();
 
     case 'profile':
-        $userController->showProfile();
+        $siteController->profile();
         break;
 
     case 'user':

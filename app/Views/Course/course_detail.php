@@ -8,7 +8,14 @@
     <p>Mô tả: <?php echo htmlspecialchars($course['description']); ?></p>
     <p>Ngày bắt đầu: <?php echo htmlspecialchars($course['start_date']); ?></p>
     <p>Ngày kết thúc: <?php echo htmlspecialchars($course['end_date']); ?></p>
-    <a href="/lecture/create/<?php echo $course['course_id']; ?>" class="btn btn-primary">Thêm bài giảng</a>
+
+    <?php if ($userData['role'] === 'student' && !$isEnrolled): ?>
+    <!-- Hiển thị nút ghi danh nếu học viên chưa ghi danh -->
+    <form action="/courses/enroll/<?php echo $course['course_id']; ?>" method="post">
+        <button type="submit" class="btn btn-success">Ghi danh</button>
+    </form>
+    <?php elseif ($isEnrolled || ($userData['role'] === 'admin' || $userData['user_id'] === $course['lecturer_id'])): ?>
+    <!-- Hiển thị danh sách bài giảng nếu đã ghi danh -->
     <h3>Bài giảng</h3>
     <ul class="list-group">
         <?php if (!empty($lectures)): ?>
@@ -19,20 +26,25 @@
                     <strong><?php echo htmlspecialchars($lecture['title']); ?></strong>
                 </a>
             </span>
+            <?php if ($userData['role'] === 'admin' || $userData['user_id'] === $course['lecturer_id']): ?>
+            <!-- Chỉ hiển thị nếu người dùng là admin hoặc giảng viên phụ trách -->
             <span>
                 <a href="/lecture/edit/<?php echo $lecture['lecture_id']; ?>" class="btn btn-link p-0">
-                    <i class="fas fa-pencil-alt"></i> <!-- Pencil icon for edit -->
+                    <i class="fas fa-pencil-alt"></i>
                 </a>
                 <a href="/lecture/delete/<?php echo $lecture['lecture_id']; ?>" class="btn btn-link text-danger p-0"
                     onclick="return confirm('Bạn có chắc chắn muốn xóa bài giảng này?');">
-                    <i class="fas fa-times"></i> <!-- 'X' icon for delete -->
+                    <i class="fas fa-times"></i>
                 </a>
             </span>
+            <?php endif; ?>
         </li>
         <?php endforeach; ?>
         <?php else: ?>
         <li class="list-group-item">Không có bài giảng nào cho khóa học này.</li>
         <?php endif; ?>
     </ul>
+    <?php endif; ?>
+
     <a href="/courses" class="btn btn-primary">Trở lại danh sách khóa học</a>
 </div>

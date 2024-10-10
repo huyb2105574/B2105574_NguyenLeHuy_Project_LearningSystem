@@ -167,15 +167,51 @@ class CourseController
         $userData = $_SESSION['user'] ?? null;
         $course = $this->courseModel->getCourseById($course_id);
         $lectures = $this->lectureModel->getAllLecturesByCourse($course_id);
+
         // Kiểm tra nếu khóa học không tồn tại
         if (!$course) {
             die('Khóa học không tồn tại.');
         }
+        $isEnrolled = false;
+        if ($userData['role'] === 'student') {
+            $isEnrolled = $this->courseModel->isStudentEnrolled($course_id, $userData['user_id']);
+        }
 
         // Trả về view hiển thị chi tiết khóa học
-        $content = $this->renderView('Course/course_detail.php', ['userData' => $userData, 'course' => $course, 'lectures' => $lectures]);
+        $content = $this->renderView('Course/course_detail.php', [
+            'userData' => $userData,
+            'course' => $course,
+            'lectures' => $lectures,
+            'isEnrolled' => $isEnrolled
+        ]);
         $this->renderLayout($content, $userData);
     }
+
+    public function enroll($course_id)
+    {
+        $userData = $_SESSION['user'] ?? null;
+
+        if ($userData['role'] !== 'student') {
+            echo "Chỉ học viên mới có thể ghi danh vào khóa học.";
+            return;
+        }
+
+        // Kiểm tra nếu đã ghi danh
+        if ($this->courseModel->isStudentEnrolled($course_id, $userData['user_id'])) {
+            echo "Bạn đã ghi danh vào khóa học này.";
+            return;
+        }
+
+        // Thực hiện ghi danh
+        if ($this->courseModel->enrollStudent($course_id, $userData['user_id'])) {
+            echo "Ghi danh thành công!";
+            header('Location: /courses/show/' . $course_id);
+        } else {
+            echo "Có lỗi xảy ra khi ghi danh!";
+        }
+    }
+
+
 
     private function renderView($view, $data = [])
     {
