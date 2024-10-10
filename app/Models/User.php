@@ -98,4 +98,12 @@ class User
 
         return $stmt->execute();
     }
+
+    public function getAllLecturers()
+    {
+        $query = "SELECT * FROM users WHERE role = 'lecturer'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

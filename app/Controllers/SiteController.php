@@ -3,15 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\Course;
-
+use App\Models\User;
 
 class SiteController
 {
     private $courseModel;
+    private $userModel;
 
     public function __construct()
     {
         $this->courseModel = new Course($this->getDatabaseConnection());
+        $this->userModel = new User($this->getDatabaseConnection());
     }
 
 
@@ -28,7 +30,15 @@ class SiteController
             exit;
         }
         $userData = $this->getUserData();
-        $content = $this->renderView('home.php', ['userData' => $userData]);
+        $courses = $this->courseModel->getAllCourses();
+        $lecturers = $this->userModel->getAllLecturers();
+
+        // Trả về view
+        $content = $this->renderView('home.php', [
+            'userData' => $userData,
+            'courses' => $courses,
+            'lecturers' => $lecturers
+        ]);
         $this->renderLayout($content, $userData);
     }
 
