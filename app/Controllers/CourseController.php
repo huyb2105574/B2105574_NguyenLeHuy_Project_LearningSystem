@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Models\Course;
 use App\Models\Lecture;
+use App\Models\Assignment;
+
 use App\Config\Database;
 
 class CourseController
@@ -11,6 +13,7 @@ class CourseController
     private $db;
     private $courseModel;
     private $lectureModel;
+    private $assignmentModel;
 
     public function __construct()
     {
@@ -18,6 +21,7 @@ class CourseController
         $this->db = $database->getConnection();
         $this->courseModel = new Course($this->db);
         $this->lectureModel = new Lecture($this->db);
+        $this->assignmentModel = new Assignment($this->db);
     }
 
     // Hiển thị form tạo khóa học
@@ -167,7 +171,7 @@ class CourseController
         $userData = $_SESSION['user'] ?? null;
         $course = $this->courseModel->getCourseById($course_id);
         $lectures = $this->lectureModel->getAllLecturesByCourse($course_id);
-
+        $assignments = $this->assignmentModel->getAllAssignmentsByCourse($course_id);
         // Kiểm tra nếu khóa học không tồn tại
         if (!$course) {
             die('Khóa học không tồn tại.');
@@ -176,13 +180,15 @@ class CourseController
         if ($userData['role'] === 'student') {
             $isEnrolled = $this->courseModel->isStudentEnrolled($course_id, $userData['user_id']);
         }
-
+        $students = $this->courseModel->getStudentsByCourse($course_id);
         // Trả về view hiển thị chi tiết khóa học
         $content = $this->renderView('Course/course_detail.php', [
             'userData' => $userData,
             'course' => $course,
             'lectures' => $lectures,
-            'isEnrolled' => $isEnrolled
+            'assignments' => $assignments,
+            'isEnrolled' => $isEnrolled,
+            'students' => $students,
         ]);
         $this->renderLayout($content, $userData);
     }
@@ -210,6 +216,8 @@ class CourseController
             echo "Có lỗi xảy ra khi ghi danh!";
         }
     }
+
+
 
 
 

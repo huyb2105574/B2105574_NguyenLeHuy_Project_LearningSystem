@@ -31,6 +31,23 @@
             </div>
 
             <div class="mb-3">
+                <label for="phone" class="form-label">Số điện thoại:</label>
+                <input type="text" id="phone_number" name="phone_number" class="form-control"
+                    value="<?= $user['phone_number'] ?>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">Địa chỉ:</label>
+                <input type="text" id="address" name="address" class="form-control" value="<?= $user['address'] ?>">
+            </div>
+
+            <div class="mb-3">
+                <label for="date_of_birth" class="form-label">Ngày sinh:</label>
+                <input type="date" id="date_of_birth" name="date_of_birth" class="form-control"
+                    value="<?= $user['date_of_birth'] ?>">
+            </div>
+
+            <div class="mb-3">
                 <label for="role" class="form-label">Vai trò:</label>
                 <select id="role" name="role" class="form-select">
                     <option value="admin" <?= $user['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>

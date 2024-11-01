@@ -5,7 +5,12 @@ use App\Controllers\SiteController;
 use App\Controllers\UserController;
 use App\Controllers\CourseController;
 use App\Controllers\LectureController;
+use App\Controllers\AssignmentController;
+use App\Controllers\SubmissionController;
+use App\Controllers\RegistrationController;
 
+
+require_once __DIR__ . "/../app/Controllers/RegistrationControlller.php";
 // Tạo phiên làm việc
 session_start();
 
@@ -25,6 +30,9 @@ $siteController = new SiteController();
 $userController = new UserController();
 $courseController = new CourseController();
 $lectureController = new LectureController();
+$assignmentController = new AssignmentController();
+$submissionController = new SubmissionController();
+$registrationController = new RegistrationController();
 
 // Điều hướng theo controller và action
 switch ($controller) {
@@ -50,13 +58,11 @@ switch ($controller) {
         }
         break;
     case '':
-        $siteController->home();
+        $siteController->courses();
         break;
-
     case 'home':
-        $siteController->home();
+        $siteController->courses();
         break;
-
     case 'login':
         $userController->login();
         break;
@@ -73,6 +79,8 @@ switch ($controller) {
     case 'user':
         if ($action == 'list' || $action == 'index') {
             $userController->listUsers();
+        } elseif ($action == 'create' && $id) {
+            $userController->createUserWithRegistration($id);
         } elseif ($action == 'create') {
             $userController->createUser();
         } elseif ($action == 'edit' && $id) {
@@ -95,6 +103,39 @@ switch ($controller) {
             $lectureController->showLecture($id);
         } else {
             echo "Action không hợp lệ trong User Controller!";
+        }
+        break;
+    case 'assignment':
+        if ($action == 'create' && $id) {
+            $assignmentController->addAssignment($id);
+        } elseif ($action == 'edit' && $id) {
+            $assignmentController->editAssignment($id);
+        } elseif ($action == 'delete' && $id) {
+            $assignmentController->deleteAssignment($id);
+        } elseif ($action == 'show' && $id) {
+            $assignmentController->showAssignment($id);
+        } else {
+            echo "Action không hợp lệ trong User Controller!";
+        }
+        break;
+    case 'submission':
+        if ($action == 'submit' && $id) {
+            $submissionController->submitAssignment($id);
+        } elseif ($action == 'edit' && $id) {
+            $submissionController->editSubmission($id);
+        } elseif ($action == 'delete' && $id) {
+            $submissionController->deleteSubmission($id);
+        } else {
+            echo "Action không hợp lệ!";
+        }
+        break;
+    case 'registration':
+        if ($action == 'register') {
+            $registrationController->createRegistration();
+        } elseif ($action == 'delete' && $id) {
+            $registrationController->deleteRegistration($id);
+        } else {
+            echo "Action không hợp lệ!";
         }
         break;
     default:

@@ -98,4 +98,16 @@ class Course
         $stmt->bindParam(':student_id', $student_id);
         return $stmt->execute();
     }
+
+    public function getStudentsByCourse($course_id)
+    {
+        $stmt = $this->conn->prepare("
+            SELECT users.user_id, users.full_name, users.email 
+            FROM enrollments 
+            JOIN users ON enrollments.student_id = users.user_id 
+            WHERE enrollments.course_id = ?
+        ");
+        $stmt->execute([$course_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

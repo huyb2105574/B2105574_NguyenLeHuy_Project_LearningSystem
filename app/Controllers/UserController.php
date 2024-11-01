@@ -4,20 +4,22 @@ namespace App\Controllers;
 
 use App\Config\Database;
 use App\Models\User;
-use App\Controllers\SiteController;
+
+use App\Models\Registration;
 
 class UserController
 {
 
     private $db;
     private $userModel;
-
+    private $registrationModel;
     public function __construct()
     {
         // Kết nối với cơ sở dữ liệu
         $database = new Database();
         $this->db = $database->getConnection();
         $this->userModel = new User($this->db);
+        $this->registrationModel = new Registration($this->db);
     }
 
     public function login()
@@ -52,7 +54,6 @@ class UserController
 
     public function createUser()
     {
-        // Check if user is logged in and is admin
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
             echo "Access denied!";
             return;
@@ -60,12 +61,15 @@ class UserController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'];
-            $password = $_POST['password'];
+            $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
             $full_name = $_POST['full_name'];
             $email = $_POST['email'];
+            $phone_number = $_POST['phone_number'];
+            $address = $_POST['address'];
+            $date_of_birth = $_POST['date_of_birth'];
             $role = $_POST['role'];
 
-            if ($this->userModel->createUser($username, $password, $full_name, $email, $role)) {
+            if ($this->userModel->createUser($username, $password, $full_name, $email, $role, $phone_number, $address, $date_of_birth)) {
                 header('Location: /user/list');
             } else {
                 echo "Error creating user!";
@@ -77,11 +81,53 @@ class UserController
         $this->renderLayout($content, $userData);
     }
 
+    public function createUserWithRegistration($registrationId = null)
+    {
+        // Kiểm tra quyền truy cập
+        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+            echo "Access denied!";
+            return;
+        }
+
+        // Lấy thông tin từ đơn đăng ký nếu có registrationId
+        $registrationData = null;
+        if ($registrationId !== null) {
+            $registrationData = $this->registrationModel->getRegistrationById($registrationId);
+            if (!$registrationData) {
+                echo "Đơn đăng ký không tồn tại!";
+                return;
+            }
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['username'];
+            $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+            $full_name = $_POST['full_name'];
+            $email = $_POST['email'];
+            $phone_number = $_POST['phone_number'];
+            $address = $_POST['address'];
+            $date_of_birth = $_POST['date_of_birth'];
+            $role = $_POST['role'];
+            if ($this->userModel->createUser($username, $password, $full_name, $email, $role, $phone_number, $address, $date_of_birth)) {
+                $this->registrationModel->approveRegistration($registrationId);
+                header('Location: /user/list');
+            } else {
+                echo "Error creating user!";
+            }
+        } else {
+            $userData = $this->getUserData();
+            $content = $this->renderView('User/create_user.php', ['userData' => $userData,  'registrationData' => $registrationData]);
+            $this->renderLayout($content, $userData);
+        }
+    }
+
+
     public function listUsers()
     {
         $users = $this->userModel->getAllUsers();
+        $registrations = $this->registrationModel->getAllRegistrations();
         $userData = $this->getUserData();
-        $content = $this->renderView('User/list_users.php', ['userData' => $userData, 'users' => $users]);
+        $content = $this->renderView('User/list_users.php', ['userData' => $userData, 'users' => $users, 'registrations' => $registrations]);
         $this->renderLayout($content, $userData);
     }
 
@@ -109,10 +155,13 @@ class UserController
             $username = $_POST['username'];
             $full_name = $_POST['full_name'];
             $email = $_POST['email'];
+            $phone_number = $_POST['phone_number'];
+            $address = $_POST['address'];
+            $date_of_birth = $_POST['date_of_birth'];
             $role = $_POST['role'];
 
             // Gọi hàm cập nhật người dùng
-            if ($this->userModel->updateUser($id, $username, $full_name, $email, $role)) {
+            if ($this->userModel->updateUser($id, $username, $full_name, $email, $role, $phone_number, $address, $date_of_birth)) {
                 header('Location: /user/list');
             } else {
                 echo "Cập nhật thất bại!";
@@ -125,6 +174,7 @@ class UserController
             $this->renderLayout($content, $userData);
         }
     }
+
 
     public function getUserData()
     {

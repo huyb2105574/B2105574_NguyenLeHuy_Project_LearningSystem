@@ -39,11 +39,11 @@
                             </li>
                         <?php endif; ?>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="/home">Trang Chủ</a>
+                            <a class="nav-link text-white" href="/courses">Trang Chủ</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link text-white" href="/courses">Khóa Học</a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/profile">Hồ Sơ</a>
                         </li>
