@@ -21,17 +21,21 @@ class RegistrationController
     public function createRegistration()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $full_name = $_POST['full_name'];
-            $email = $_POST['email'];
-            $phone_number = $_POST['phone_number'];
-            $address = $_POST['address'];
-            $date_of_birth = $_POST['date_of_birth'];
-            $role = $_POST['role'];
+            $full_name = $_POST['full_name'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $phone_number = $_POST['phone_number'] ?? '';
+            $address = $_POST['address'] ?? '';
+            $date_of_birth = $_POST['date_of_birth'] ?? '';
+            $role = $_POST['role'] ?? '';
+            if (empty($full_name) || empty($email) || empty($role)) {
+                return $this->sendJsonResponse('error', 'Các trường bắt buộc không được để trống!');
+            }
+
 
             if ($this->registrationModel->createRegistration($full_name, $email, $phone_number, $address, $date_of_birth, $role)) {
-                exit;
+                return $this->sendJsonResponse('success', 'Đăng ký thành công!');
             } else {
-                echo "Error creating registration!";
+                return $this->sendJsonResponse('error', 'Đã xảy ra lỗi khi tạo bản đăng ký!');
             }
         }
 
@@ -41,35 +45,26 @@ class RegistrationController
     public function deleteRegistration($id = null)
     {
         if ($id === null) {
-            echo "ID không tồn tại.";
-            return;
+            return $this->sendJsonResponse('error', 'ID không tồn tại.');
         }
 
         if ($this->registrationModel->deleteRegistration($id)) {
             header("Location: /user/list");
             exit;
         } else {
-            echo "Xóa bản đăng ký thất bại.";
+            return $this->sendJsonResponse('error', 'Xóa bản đăng ký thất bại.');
         }
     }
-
 
     public function getUserData()
     {
         return $_SESSION['user'] ?? null;
     }
 
-    public function renderView($view, $data = [])
+    private function sendJsonResponse($status, $message)
     {
-        extract($data);
-        ob_start();
-        include __DIR__ . "/../Views/$view";
-        return ob_get_clean();
-    }
-
-    public function renderLayout($content, $userData = [])
-    {
-        $layoutPath = __DIR__ . '/../Views/layout.php';
-        include $layoutPath;
+        header('Content-Type: application/json');
+        echo json_encode(['status' => $status, 'message' => $message]);
+        exit;
     }
 }

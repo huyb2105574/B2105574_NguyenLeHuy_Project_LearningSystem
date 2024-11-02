@@ -20,7 +20,6 @@ class AssignmentController
         $this->submissionModel = new Submission($this->db);
     }
 
-    // Hiển thị danh sách bài tập của khóa học
     public function showAllAssignments($courseId)
     {
         $assignments = $this->assignmentModel->getAllAssignmentsByCourse($courseId);

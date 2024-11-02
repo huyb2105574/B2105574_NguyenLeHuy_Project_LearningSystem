@@ -14,6 +14,6 @@
         <button type="submit" class="btn btn-primary mt-3">Nộp bài</button>
     </form>
 
-    <a href="/assignments/show/<?php echo htmlspecialchars($assignmentId); ?>" class="btn btn-secondary mt-3">Quay lại
+    <a href="/assignment/show/<?php echo htmlspecialchars($assignmentId); ?>" class="btn btn-secondary mt-3">Quay lại
         bài tập</a>
 </div>

@@ -38,10 +38,10 @@ class User
         }
     }
 
-    public function createUser($username, $password, $full_name, $email, $role, $phone_number, $address, $date_of_birth)
+    public function createUser($username, $password, $full_name, $email, $role, $phone_number, $address, $date_of_birth, $registration_id = null)
     {
-        $query = "INSERT INTO " . $this->table . " (username, password, full_name, email, phone_number, address, date_of_birth, role) 
-                VALUES (:username, :password, :full_name, :email, :phone_number, :address, :date_of_birth, :role)";
+        $query = "INSERT INTO " . $this->table . " (username, password, full_name, email, phone_number, address, date_of_birth, role, registration_id) 
+                VALUES (:username, :password, :full_name, :email, :phone_number, :address, :date_of_birth, :role, :registration_id)";
         $stmt = $this->conn->prepare($query);
 
 
@@ -53,7 +53,7 @@ class User
         $stmt->bindParam(':address', $address);
         $stmt->bindParam(':date_of_birth', $date_of_birth);
         $stmt->bindParam(':role', $role);
-
+        $stmt->bindParam(':registration_id', $registration_id);
         return $stmt->execute();
     }
 

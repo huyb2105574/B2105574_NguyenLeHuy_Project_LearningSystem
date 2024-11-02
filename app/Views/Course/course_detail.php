@@ -1,3 +1,11 @@
+<?php if (isset($_SESSION['message'])): ?>
+    <div class="alert alert-info">
+        <?php echo $_SESSION['message']; ?>
+    </div>
+    <?php unset($_SESSION['message']);
+    ?>
+<?php endif; ?>
+
 <div class="container mt-4">
     <h1>Chi tiết khóa học</h1>
     <div class="course-detail row">

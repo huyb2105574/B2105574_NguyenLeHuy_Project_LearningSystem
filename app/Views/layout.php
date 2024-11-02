@@ -8,58 +8,58 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+    body {
+        font-family: Arial, sans-serif;
+    }
 
-        /* Thanh điều hướng */
-        .navbar {
-            background-color: #fff;
-            padding: 10px 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+    /* Thanh điều hướng */
+    .navbar {
+        background-color: #fff;
+        padding: 10px 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-        /* Tăng kích thước logo */
-        .navbar-brand img {
-            height: 60px;
-            /* Thay đổi từ 40px thành 60px để logo lớn hơn */
-            margin-right: 10px;
-        }
+    /* Tăng kích thước logo */
+    .navbar-brand img {
+        height: 60px;
+        /* Thay đổi từ 40px thành 60px để logo lớn hơn */
+        margin-right: 10px;
+    }
 
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
-            display: flex;
-            align-items: center;
-        }
+    .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
 
-        /* Menu items */
-        .navbar-nav .nav-link {
-            color: #333 !important;
-            font-size: 1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            padding: 0 15px;
-            position: relative;
-        }
+    /* Menu items */
+    .navbar-nav .nav-link {
+        color: #333 !important;
+        font-size: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 0 15px;
+        position: relative;
+    }
 
-        /* Loại bỏ mũi tên */
-        .navbar-nav .nav-link::after {
-            display: none;
-            /* Ẩn mũi tên sau các mục menu */
-        }
+    /* Loại bỏ mũi tên */
+    .navbar-nav .nav-link::after {
+        display: none;
+        /* Ẩn mũi tên sau các mục menu */
+    }
 
-        .navbar-nav .nav-link:hover {
-            color: #555 !important;
-        }
+    .navbar-nav .nav-link:hover {
+        color: #555 !important;
+    }
 
-        /* Icon tìm kiếm */
-        .search-icon {
-            font-size: 1.2rem;
-            color: #333;
-            cursor: pointer;
-        }
+    /* Icon tìm kiếm */
+    .search-icon {
+        font-size: 1.2rem;
+        color: #333;
+        cursor: pointer;
+    }
     </style>
 </head>
 
@@ -69,7 +69,7 @@
             <nav class="navbar navbar-expand-lg">
                 <!-- Logo bên trái -->
                 <a class="navbar-brand" href="/home">
-                    <img src="/public/logo/logo.png" alt="Logo" />
+
                     Learning
                 </a>
                 <!-- Nút toggle trên thiết bị di động -->
@@ -82,9 +82,9 @@
                     <ul class="navbar-nav">
                         <!-- Hiển thị nút tạo tài khoản nếu người dùng là admin -->
                         <?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="/user">Quản lý tài khoản</a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/user">Quản lý tài khoản</a>
+                        </li>
                         <?php endif; ?>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/courses">Trang Chủ</a>
@@ -93,13 +93,13 @@
                             <a class="nav-link text-white" href="/profile">Hồ Sơ</a>
                         </li>
                         <?php if (isset($userData['full_name'])): ?>
-                            <li class="nav-item">
-                                <span class="nav-link text-white">Chào,
-                                    <?php echo htmlspecialchars($userData['full_name']); ?>!</span>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="/logout">Đăng Xuất</a>
-                            </li>
+                        <li class="nav-item">
+                            <span class="nav-link text-white">Chào,
+                                <?php echo htmlspecialchars($userData['full_name']); ?>!</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/logout">Đăng Xuất</a>
+                        </li>
                         <?php endif; ?>
                     </ul>
                 </div>

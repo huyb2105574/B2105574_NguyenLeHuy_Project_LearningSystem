@@ -201,42 +201,54 @@ class CourseController
 
     public function enroll($course_id)
     {
+        session_start();
         $userData = $_SESSION['user'] ?? null;
 
         if ($userData['role'] !== 'student') {
-            echo "Chỉ học viên mới có thể ghi danh vào khóa học.";
-            return;
+            $_SESSION['message'] = "Chỉ học viên mới có thể ghi danh vào khóa học.";
+            header('Location: /courses/show/' . $course_id);
+            exit();
         }
 
         if ($this->courseModel->isStudentEnrolled($course_id, $userData['user_id'])) {
-            echo "Yêu cầu ghi danh của bạn đang chờ duyệt.";
-            return;
+            $_SESSION['message'] = "Yêu cầu ghi danh của bạn đang chờ duyệt.";
+            header('Location: /courses/show/' . $course_id);
+            exit();
         }
 
         if ($this->courseModel->enrollStudent($course_id, $userData['user_id'])) {
-            echo "Yêu cầu ghi danh của bạn đã được gửi thành công!";
-            header('Location: /courses/show/' . $course_id);
+            $_SESSION['message'] = "Yêu cầu ghi danh của bạn đã được gửi thành công!";
         } else {
-            echo "Có lỗi xảy ra!";
+            $_SESSION['message'] = "Có lỗi xảy ra!";
         }
+        header('Location: /courses/show/' . $course_id);
+        exit();
     }
 
     public function approveEnrollment($enrollment_id)
     {
+        session_start();
+
         if ($this->courseModel->approveEnrollment($enrollment_id)) {
-            echo "Yêu cầu ghi danh đã được duyệt.";
+            $_SESSION['message'] = "Yêu cầu ghi danh đã được duyệt.";
         } else {
-            echo "Có lỗi xảy ra khi duyệt yêu cầu!";
+            $_SESSION['message'] = "Có lỗi xảy ra khi duyệt yêu cầu!";
         }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
     }
 
     public function rejectEnrollment($enrollment_id)
     {
+        session_start();
+
         if ($this->courseModel->rejectEnrollment($enrollment_id)) {
-            echo "Yêu cầu ghi danh đã bị từ chối.";
+            $_SESSION['message'] = "Yêu cầu ghi danh đã bị từ chối.";
         } else {
-            echo "Có lỗi xảy ra khi từ chối yêu cầu!";
+            $_SESSION['message'] = "Có lỗi xảy ra khi từ chối yêu cầu!";
         }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
     }
 
     private function renderView($view, $data = [])

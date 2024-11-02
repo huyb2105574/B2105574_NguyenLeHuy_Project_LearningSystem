@@ -6,10 +6,11 @@
     <p><strong>Ngày tạo:</strong> <?php echo htmlspecialchars($assignment['created_at']); ?></p>
 
     <a href="/courses/show/<?php echo $assignment['course_id']; ?>" class="btn btn-secondary mt-3">Quay lại khóa học</a>
-    <a href="/assignment/edit/<?php echo $assignment['assignment_id']; ?>" class="btn btn-warning mt-3">Chỉnh sửa</a>
-    <a href="/assignment/delete/<?php echo $assignment['assignment_id']; ?>" class="btn btn-danger mt-3"
-        onclick="return confirm('Bạn có chắc muốn xóa bài tập này?');">Xóa</a>
-
+    <?php if (isset($userData['role']) && ($userData['role'] === 'admin' || $userData['role'] === 'lecture')): ?>
+        <a href="/assignment/edit/<?php echo $assignment['assignment_id']; ?>" class="btn btn-warning mt-3">Chỉnh sửa</a>
+        <a href="/assignment/delete/<?php echo $assignment['assignment_id']; ?>" class="btn btn-danger mt-3"
+            onclick="return confirm('Bạn có chắc muốn xóa bài tập này?');">Xóa</a>
+    <?php endif; ?>
     <?php if (!empty($assignment['file_path'])): ?>
         <h3 class="mt-4">Tài liệu Bài Tập</h3>
         <iframe class="pdf-viewer" src="/<?php echo htmlspecialchars($assignment['file_path']); ?>"

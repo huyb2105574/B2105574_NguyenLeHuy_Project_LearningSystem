@@ -24,6 +24,7 @@ class UserController
 
     public function login()
     {
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'];
             $password = $_POST['password'];
@@ -42,18 +43,19 @@ class UserController
                     'date_of_birth' => $user['date_of_birth'],
                     'role' => $user['role']
                 ];
-                header('Location: /home');
-                exit;
+                echo json_encode(['status' => 'success', 'message' => 'Đăng nhập thành công!']);
             } else {
-                echo "Tên đăng nhập hoặc mật khẩu không chính xác!";
+                echo json_encode(['status' => 'error', 'message' => 'Tên đăng nhập hoặc mật khẩu không chính xác!']);
             }
+            exit();
+            header('Location:/login');
         }
 
-        // Hiển thị form đăng nhập nếu không phải POST
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            require_once __DIR__ . '/../Views/User/login.php';  // Hiển thị form login
+            require_once __DIR__ . '/../Views/User/login.php';
         }
     }
+
 
     public function createUser()
     {
@@ -111,7 +113,7 @@ class UserController
             $address = $_POST['address'];
             $date_of_birth = $_POST['date_of_birth'];
             $role = $_POST['role'];
-            if ($this->userModel->createUser($username, $password, $full_name, $email, $role, $phone_number, $address, $date_of_birth)) {
+            if ($this->userModel->createUser($username, $password, $full_name, $email, $role, $phone_number, $address, $date_of_birth, $registrationId)) {
                 $this->registrationModel->approveRegistration($registrationId);
                 header('Location: /user/list');
             } else {
