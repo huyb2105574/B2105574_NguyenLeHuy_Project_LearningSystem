@@ -14,18 +14,15 @@ class User
         $this->conn = $db;
     }
 
-    // Lấy thông tin người dùng theo ID
-    public function getUserById($id)
+    public function getUserById($userId)
     {
-        $query = "SELECT * FROM " . $this->table . " WHERE user_id = :id";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt = $this->conn->prepare("SELECT user_id, username, password, full_name, email, phone_number, address, date_of_birth, role FROM users WHERE user_id = :user_id");
+        $stmt->bindParam(':user_id', $userId);
         $stmt->execute();
-
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Lấy thông tin người dùng theo username
+
     public function getUserByUserName($username)
     {
         try {
@@ -47,10 +44,9 @@ class User
                 VALUES (:username, :password, :full_name, :email, :phone_number, :address, :date_of_birth, :role)";
         $stmt = $this->conn->prepare($query);
 
-        $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
         $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $password_hash);
+        $stmt->bindParam(':password', $password);
         $stmt->bindParam(':full_name', $full_name);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':phone_number', $phone_number);
@@ -108,5 +104,41 @@ class User
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getEnrolledCoursesByUserId($userId)
+    {
+        $query = "SELECT courses.course_name 
+              FROM enrollments 
+              JOIN courses ON enrollments.course_id = courses.course_id 
+              WHERE enrollments.student_id = :userId";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updatePassword($userId, $newPassword)
+    {
+        $stmt = $this->conn->prepare("UPDATE users SET password = :password WHERE user_id = :user_id");
+        $stmt->bindParam(':password', $newPassword);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+    }
+    public function updateUserInfo($id, $full_name, $email, $phone_number, $address, $date_of_birth)
+    {
+        $query = "UPDATE " . $this->table . " 
+              SET full_name = :full_name, email = :email,
+                  phone_number = :phone_number, address = :address, date_of_birth = :date_of_birth
+              WHERE user_id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':full_name', $full_name);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':phone_number', $phone_number);
+        $stmt->bindParam(':address', $address);
+        $stmt->bindParam(':date_of_birth', $date_of_birth);
+        $stmt->bindParam(':id', $id);
+
+        return $stmt->execute();
     }
 }

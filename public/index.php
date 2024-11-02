@@ -57,11 +57,21 @@ switch ($controller) {
             echo "Action không hợp lệ trong Courses Controller!";
         }
         break;
+    case 'enrollment':
+        if ($action == 'reject' && $id) {
+            $courseController->rejectEnrollment($id);
+        } elseif ($action == 'approve' && $id) {
+            $courseController->approveEnrollment($id);
+        } else {
+            echo "Action không hợp lệ trong Enrollment Controller!";
+        }
+        break;
+
     case '':
-        $siteController->courses();
+        $siteController->home();
         break;
     case 'home':
-        $siteController->courses();
+        $siteController->home();
         break;
     case 'login':
         $userController->login();
@@ -87,6 +97,10 @@ switch ($controller) {
             $userController->editUser($id);
         } elseif ($action == 'delete' && $id) {
             $userController->deleteUser($id);
+        } elseif ($action == 'change_password' && $id) {
+            $userController->changePassword($id);
+        } elseif ($action == 'update_info' && $id) {
+            $userController->updateInfo($id);
         } else {
             echo "Action không hợp lệ trong User Controller!";
         }
@@ -102,7 +116,7 @@ switch ($controller) {
         } elseif ($action == 'show' && $id) {
             $lectureController->showLecture($id);
         } else {
-            echo "Action không hợp lệ trong User Controller!";
+            echo "Action không hợp lệ trong Lecture Controller!";
         }
         break;
     case 'assignment':
@@ -115,7 +129,7 @@ switch ($controller) {
         } elseif ($action == 'show' && $id) {
             $assignmentController->showAssignment($id);
         } else {
-            echo "Action không hợp lệ trong User Controller!";
+            echo "Action không hợp lệ trong Assignment Controller!";
         }
         break;
     case 'submission':

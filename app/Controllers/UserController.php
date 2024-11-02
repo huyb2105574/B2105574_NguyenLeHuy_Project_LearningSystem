@@ -37,6 +37,9 @@ class UserController
                     'username' => $user['username'],
                     'email' => $user['email'],
                     'full_name' => $user['full_name'],
+                    'phone_number' => $user['phone_number'],
+                    'address' => $user['address'],
+                    'date_of_birth' => $user['date_of_birth'],
                     'role' => $user['role']
                 ];
                 header('Location: /home');
@@ -174,6 +177,62 @@ class UserController
             $this->renderLayout($content, $userData);
         }
     }
+
+    public function changePassword($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $currentPassword = $_POST['current_password'];
+            $newPassword = $_POST['new_password'];
+            $confirmPassword = $_POST['confirm_password'];
+            $userId = $id;
+
+            // Kiểm tra sự khớp của mật khẩu xác nhận
+            if ($newPassword !== $confirmPassword) {
+                $_SESSION['error_message'] = 'Mật khẩu xác nhận không khớp.';
+                header('Location: /profile');
+                exit();
+            }
+
+            // Lấy thông tin người dùng từ cơ sở dữ liệu
+            $user = $this->userModel->getUserById($userId);
+            // Kiểm tra mật khẩu hiện tại
+            if (password_verify($currentPassword, $user['password'])) {
+                // Mã hóa và cập nhật mật khẩu mới
+                $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                $this->userModel->updatePassword($userId, $hashedPassword);
+                $_SESSION['success_message'] = 'Đổi mật khẩu thành công.';
+            } else {
+                $_SESSION['error_message'] = 'Mật khẩu hiện tại không đúng.';
+            }
+
+            // Chuyển hướng về trang profile
+            header('Location: /profile');
+            exit();
+        }
+    }
+
+    public function updateInfo($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userId = $id;
+            $full_name = $_POST['full_name'];
+            $email = $_POST['email'];
+            $phone_number = $_POST['phone_number'];
+            $address = $_POST['address'];
+            $date_of_birth = $_POST['date_of_birth'];
+
+            $isUpdated = $this->userModel->updateUserInfo($id, $full_name, $email, $phone_number, $address, $date_of_birth);
+
+            if ($isUpdated) {
+                $_SESSION['success_message'] = 'Cập nhật thông tin thành công.';
+            } else {
+                $_SESSION['error_message'] = 'Cập nhật thông tin thất bại.';
+            }
+            header('Location: /profile');
+            exit();
+        }
+    }
+
 
 
     public function getUserData()

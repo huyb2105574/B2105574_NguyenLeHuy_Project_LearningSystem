@@ -34,7 +34,7 @@ class SiteController
         $lecturers = $this->userModel->getAllLecturers();
 
         // Trả về view
-        $content = $this->renderView('home.php', [
+        $content = $this->renderView('Course/courses.php', [
             'userData' => $userData,
             'courses' => $courses,
             'lecturers' => $lecturers
@@ -56,8 +56,10 @@ class SiteController
             echo "Bạn cần đăng nhập để xem hồ sơ.";
             return;
         }
-        $userData = $this->getUserData();
-        $content = $this->renderView('User/profile.php', ['userData' => $userData]);
+        $userData = $this->userModel->getUserById($_SESSION['user']['user_id']);
+        $coursesEnrollments = $this->userModel->getEnrolledCoursesByUserId($userData['user_id']);
+
+        $content = $this->renderView('User/profile.php', ['userData' => $userData, 'coursesEnrollments' => $coursesEnrollments]);
         $this->renderLayout($content, $userData);
     }
 

@@ -178,7 +178,8 @@ class CourseController
         }
         $isEnrolled = false;
         if ($userData['role'] === 'student') {
-            $isEnrolled = $this->courseModel->isStudentEnrolled($course_id, $userData['user_id']);
+            $status = $this->courseModel->getEnrollmentStatus($userData['user_id'], $course['course_id']);
+            $isEnrolled = ($status === 'approved');
         }
         $students = $this->courseModel->getStudentsByCourse($course_id);
         // Trả về view hiển thị chi tiết khóa học
@@ -202,24 +203,36 @@ class CourseController
             return;
         }
 
-        // Kiểm tra nếu đã ghi danh
         if ($this->courseModel->isStudentEnrolled($course_id, $userData['user_id'])) {
-            echo "Bạn đã ghi danh vào khóa học này.";
+            echo "Yêu cầu ghi danh của bạn đang chờ duyệt.";
             return;
         }
 
-        // Thực hiện ghi danh
         if ($this->courseModel->enrollStudent($course_id, $userData['user_id'])) {
-            echo "Ghi danh thành công!";
+            echo "Yêu cầu ghi danh của bạn đã được gửi thành công!";
             header('Location: /courses/show/' . $course_id);
         } else {
-            echo "Có lỗi xảy ra khi ghi danh!";
+            echo "Có lỗi xảy ra!";
         }
     }
 
+    public function approveEnrollment($enrollment_id)
+    {
+        if ($this->courseModel->approveEnrollment($enrollment_id)) {
+            echo "Yêu cầu ghi danh đã được duyệt.";
+        } else {
+            echo "Có lỗi xảy ra khi duyệt yêu cầu!";
+        }
+    }
 
-
-
+    public function rejectEnrollment($enrollment_id)
+    {
+        if ($this->courseModel->rejectEnrollment($enrollment_id)) {
+            echo "Yêu cầu ghi danh đã bị từ chối.";
+        } else {
+            echo "Có lỗi xảy ra khi từ chối yêu cầu!";
+        }
+    }
 
     private function renderView($view, $data = [])
     {

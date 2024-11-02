@@ -10,12 +10,10 @@
         <p>Ngày kết thúc: <?php echo htmlspecialchars($course['end_date']); ?></p>
 
         <?php if ($userData['role'] === 'student' && !$isEnrolled): ?>
-            <!-- Nút ghi danh nếu học viên chưa ghi danh -->
             <form action="/courses/enroll/<?php echo $course['course_id']; ?>" method="post">
                 <button type="submit" class="btn btn-success">Ghi danh</button>
             </form>
         <?php elseif ($isEnrolled || ($userData['role'] === 'admin' || $userData['user_id'] === $course['lecturer_id'])): ?>
-            <!-- Danh sách bài giảng -->
             <a href="/lecture/create/<?php echo $course['course_id']; ?>" class="btn btn-success mb-3">Thêm Bài Giảng</a>
             <h3>Bài giảng</h3>
             <ul class="list-group">
@@ -45,7 +43,6 @@
                 <?php endif; ?>
             </ul>
 
-            <!-- Danh sách bài tập -->
             <a href="/assignment/create/<?php echo $course['course_id']; ?>" class="btn btn-success mb-3">Thêm Bài Tập</a>
             <h3>Bài tập</h3>
             <ul class="list-group">
@@ -77,14 +74,16 @@
             </ul>
         <?php endif; ?>
 
-        <?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
-            <h3>Học viên đã ghi danh</h3>
+        <?php if (isset($userData['role']) && ($userData['role'] === 'admin' || $userData['role'] === 'lecture')): ?>
+            <h3>Học viên đã ghi danh</h3>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered text-center">
                     <thead class="thead-dark">
                         <tr>
                             <th>Full Name</th>
                             <th>Email</th>
+                            <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,11 +92,26 @@
                                 <tr>
                                     <td><?php echo htmlspecialchars($student['full_name']); ?></td>
                                     <td><?php echo htmlspecialchars($student['email']); ?></td>
+                                    <td><?php echo htmlspecialchars($student['status']); ?></td>
+                                    <td>
+                                        <?php if ($student['status'] === 'pending'): ?>
+                                            <form action="/enrollment/approve/<?php echo $student['enrollment_id']; ?>" method="post"
+                                                class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-success">Duyệt</button>
+                                            </form>
+                                            <form action="/enrollment/reject/<?php echo $student['enrollment_id']; ?>" method="post"
+                                                class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-danger">Từ chối</button>
+                                            </form>
+                                        <?php else: ?>
+                                            <?php echo ucfirst($student['status']); ?>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="2">Chưa có học sinh nào ghi danh</td>
+                                <td colspan="4">Chưa có học sinh nào ghi danh</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

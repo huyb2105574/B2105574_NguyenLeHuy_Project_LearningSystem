@@ -79,6 +79,17 @@ class Course
 
         return $stmt->execute();
     }
+
+    public function getEnrollmentStatus($student_id, $course_id)
+    {
+        $query = "SELECT status FROM enrollments WHERE student_id = :student_id AND course_id = :course_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':student_id', $student_id);
+        $stmt->bindParam(':course_id', $course_id);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
     public function isStudentEnrolled($course_id, $student_id)
     {
         $query = "SELECT * FROM enrollments WHERE course_id = :course_id AND student_id = :student_id";
@@ -89,20 +100,34 @@ class Course
         return $stmt->fetch() ? true : false;
     }
 
-    // Ghi danh học viên vào khóa học
     public function enrollStudent($course_id, $student_id)
     {
-        $query = "INSERT INTO enrollments (course_id, student_id) VALUES (:course_id, :student_id)";
+        $query = "INSERT INTO enrollments (course_id, student_id, status) VALUES (:course_id, :student_id, 'pending')";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':course_id', $course_id);
         $stmt->bindParam(':student_id', $student_id);
         return $stmt->execute();
     }
 
+    public function approveEnrollment($enrollment_id)
+    {
+        $stmt = $this->conn->prepare("UPDATE enrollments SET status = 'approved' WHERE enrollment_id = :enrollment_id");
+        $stmt->bindParam(':enrollment_id', $enrollment_id);
+        return $stmt->execute();
+    }
+
+    public function rejectEnrollment($enrollment_id)
+    {
+        $stmt = $this->conn->prepare("UPDATE enrollments SET status = 'rejected' WHERE enrollment_id = :enrollment_id");
+        $stmt->bindParam(':enrollment_id', $enrollment_id);
+        return $stmt->execute();
+    }
+
+
     public function getStudentsByCourse($course_id)
     {
         $stmt = $this->conn->prepare("
-            SELECT users.user_id, users.full_name, users.email 
+            SELECT users.user_id, users.full_name, users.email, enrollments.status, enrollments.enrollment_id 
             FROM enrollments 
             JOIN users ON enrollments.student_id = users.user_id 
             WHERE enrollments.course_id = ?

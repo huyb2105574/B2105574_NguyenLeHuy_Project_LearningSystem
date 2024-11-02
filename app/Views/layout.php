@@ -5,33 +5,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Học Tập</title>
-    <link rel="stylesheet" href="/public/styles.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
         }
 
-        .pdf-viewer {
-            width: 100%;
-            height: 80vh;
-            border: none;
+        /* Thanh điều hướng */
+        .navbar {
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Tăng kích thước logo */
+        .navbar-brand img {
+            height: 60px;
+            /* Thay đổi từ 40px thành 60px để logo lớn hơn */
+            margin-right: 10px;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Menu items */
+        .navbar-nav .nav-link {
+            color: #333 !important;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 0 15px;
+            position: relative;
+        }
+
+        /* Loại bỏ mũi tên */
+        .navbar-nav .nav-link::after {
+            display: none;
+            /* Ẩn mũi tên sau các mục menu */
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #555 !important;
+        }
+
+        /* Icon tìm kiếm */
+        .search-icon {
+            font-size: 1.2rem;
+            color: #333;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-    <header class="bg-primary text-white py-2">
+    <header>
         <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand text-white" href="/home">Learning</a>
+            <nav class="navbar navbar-expand-lg">
+                <!-- Logo bên trái -->
+                <a class="navbar-brand" href="/home">
+                    <img src="uploads/logo.png" alt="Logo">
+                    Learning
+                </a>
+                <!-- Nút toggle trên thiết bị di động -->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
+                <!-- Menu căn giữa -->
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                    <ul class="navbar-nav">
                         <!-- Hiển thị nút tạo tài khoản nếu người dùng là admin -->
                         <?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
                             <li class="nav-item">
@@ -41,9 +89,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/courses">Trang Chủ</a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link text-white" href="/courses">Khóa Học</a>
-                        </li> -->
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/profile">Hồ Sơ</a>
                         </li>
@@ -58,10 +103,15 @@
                         <?php endif; ?>
                     </ul>
                 </div>
+                <!-- Icon tìm kiếm bên phải -->
+                <div class="search-icon ml-auto">
+                    <i class="fas fa-search"></i>
+                </div>
             </nav>
         </div>
     </header>
 
+    <!-- Nội dung chính -->
     <main class="container mt-4">
         <div class="content">
             <?php echo $content; // Nội dung động 
@@ -77,6 +127,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>
