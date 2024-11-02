@@ -69,7 +69,7 @@
             <nav class="navbar navbar-expand-lg">
                 <!-- Logo bên trái -->
                 <a class="navbar-brand" href="/home">
-                    <img src="uploads/logo.png" alt="Logo">
+                    <img src="/public/logo/logo.png" alt="Logo" />
                     Learning
                 </a>
                 <!-- Nút toggle trên thiết bị di động -->

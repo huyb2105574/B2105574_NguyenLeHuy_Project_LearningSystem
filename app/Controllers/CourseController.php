@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Models\Course;
 use App\Models\Lecture;
 use App\Models\Assignment;
-
+use App\Models\User;
 use App\Config\Database;
 
 class CourseController
@@ -14,7 +14,7 @@ class CourseController
     private $courseModel;
     private $lectureModel;
     private $assignmentModel;
-
+    private $userModel;
     public function __construct()
     {
         $database = new Database();
@@ -22,6 +22,7 @@ class CourseController
         $this->courseModel = new Course($this->db);
         $this->lectureModel = new Lecture($this->db);
         $this->assignmentModel = new Assignment($this->db);
+        $this->userModel = new User($this->db);
     }
 
     // Hiển thị form tạo khóa học
@@ -176,6 +177,9 @@ class CourseController
         if (!$course) {
             die('Khóa học không tồn tại.');
         }
+        $lecturerId = $course['lecturer_id'];
+        $lecturer = $this->userModel->getUserById($lecturerId);
+        $lecturerName = $lecturer['full_name'];
         $isEnrolled = false;
         if ($userData['role'] === 'student') {
             $status = $this->courseModel->getEnrollmentStatus($userData['user_id'], $course['course_id']);
@@ -190,6 +194,7 @@ class CourseController
             'assignments' => $assignments,
             'isEnrolled' => $isEnrolled,
             'students' => $students,
+            'lecturerName' => $lecturerName,
         ]);
         $this->renderLayout($content, $userData);
     }

@@ -29,16 +29,20 @@ class AssignmentController
         $this->renderLayout($content, $userData);
     }
 
-    // Thêm bài tập
     public function addAssignment($courseId)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title = $_POST['title'];
             $description = $_POST['description'];
             $dueDate = $_POST['due_date'];
-
-            // Thêm bài tập vào cơ sở dữ liệu
-            $this->assignmentModel->addAssignment($courseId, $title, $description, $dueDate);
+            $filePath = null;
+            if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+                $fileTmpPath = $_FILES['file']['tmp_name'];
+                $fileName = $_FILES['file']['name'];
+                $filePath = 'uploads/' . basename($fileName);
+                move_uploaded_file($fileTmpPath, $filePath);
+            }
+            $this->assignmentModel->addAssignment($courseId, $title, $description, $dueDate, $filePath);
             header("Location: /courses/show/$courseId");
             exit();
         }
@@ -47,7 +51,7 @@ class AssignmentController
         $this->renderLayout($content, $userData);
     }
 
-    // Sửa bài tập
+
     public function editAssignment($assignmentId)
     {
         $assignment = $this->assignmentModel->getAssignmentById($assignmentId);
@@ -57,8 +61,16 @@ class AssignmentController
             $description = $_POST['description'];
             $dueDate = $_POST['due_date'];
 
-            // Cập nhật bài tập
-            $this->assignmentModel->updateAssignment($assignmentId, $title, $description, $dueDate);
+            $filePath = $assignment['file_path'];
+            if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+                $fileTmpPath = $_FILES['file']['tmp_name'];
+                $fileName = $_FILES['file']['name'];
+                $filePath = 'uploads/' . basename($fileName);
+                move_uploaded_file($fileTmpPath, $filePath);
+            }
+
+
+            $this->assignmentModel->updateAssignment($assignmentId, $title, $description, $dueDate, $filePath);
             header("Location: /courses/show/" . $assignment['course_id']);
             exit();
         }
@@ -67,7 +79,6 @@ class AssignmentController
         $this->renderLayout($content, $userData);
     }
 
-    // Xóa bài tập
     public function deleteAssignment($assignmentId)
     {
         $assignment = $this->assignmentModel->getAssignmentById($assignmentId);
@@ -80,13 +91,21 @@ class AssignmentController
         $assignment = $this->assignmentModel->getAssignmentById($assignmentId);
         $userData = $this->getUserData();
         $submission = $this->submissionModel->getSubmissionByAssignmentAndUser($assignmentId, $userData['user_id']);
+        $submissions = $this->submissionModel->getAllSubmissionsByAssignment($assignmentId);
+
         if ($assignment) {
-            $content = $this->renderView('Assignment/show_assignment.php', ['userData' => $userData, 'assignment' => $assignment, "submission" => $submission]);
+            $content = $this->renderView('Assignment/show_assignment.php', [
+                'userData' => $userData,
+                'assignment' => $assignment,
+                'submission' => $submission,
+                'submissions' => $submissions
+            ]);
             $this->renderLayout($content, $userData);
         } else {
             echo "Bài tập không tồn tại";
         }
     }
+
 
     public function getUserData()
     {

@@ -1,6 +1,6 @@
 <div class="container mt-4">
     <h2>Thêm Bài Tập Mới</h2>
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">Tiêu đề:</label>
             <input type="text" class="form-control" id="title" name="title" required>
@@ -12,6 +12,10 @@
         <div class="form-group">
             <label for="due_date">Ngày hết hạn:</label>
             <input type="date" class="form-control" id="due_date" name="due_date" required>
+        </div>
+        <div class="form-group">
+            <label for="file">Tải lên tài liệu (nếu có):</label>
+            <input type="file" class="form-control" id="file" name="file">
         </div>
         <button type="submit" class="btn btn-primary">Thêm Bài Tập</button>
     </form>

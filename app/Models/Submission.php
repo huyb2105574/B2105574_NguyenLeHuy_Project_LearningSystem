@@ -58,4 +58,16 @@ class Submission
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getAllSubmissionsByAssignment($assignmentId)
+    {
+        $stmt = $this->db->prepare("
+            SELECT submissions.*, users.full_name
+            FROM submissions
+            JOIN users ON submissions.student_id = users.user_id
+            WHERE submissions.assignment_id = ?
+        ");
+        $stmt->execute([$assignmentId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

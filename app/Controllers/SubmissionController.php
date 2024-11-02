@@ -88,6 +88,27 @@ class SubmissionController
         }
     }
 
+    public function viewSubmission($id)
+    {
+        $submission = $this->submissionModel->getSubmissionById($id);
+
+        if ($submission) {
+            $filePath = $submission['file_path'];
+
+            if (file_exists($filePath)) {
+                header('Content-Type: application/pdf');
+                header('Content-Disposition: inline; filename="' . basename($filePath) . '"');
+                readfile($filePath);
+                exit;
+            } else {
+                echo "File không tồn tại.";
+            }
+        } else {
+            echo "Không tìm thấy bài nộp.";
+        }
+    }
+
+
 
     public function getUserData()
     {

@@ -133,7 +133,9 @@ switch ($controller) {
         }
         break;
     case 'submission':
-        if ($action == 'submit' && $id) {
+        if ($action == 'view' && $id) {
+            $submissionController->viewSubmission($id);
+        } elseif ($action == 'submit' && $id) {
             $submissionController->submitAssignment($id);
         } elseif ($action == 'edit' && $id) {
             $submissionController->editSubmission($id);

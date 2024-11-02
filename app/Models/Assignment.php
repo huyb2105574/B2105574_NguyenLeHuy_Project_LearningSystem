@@ -20,11 +20,12 @@ class Assignment
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function addAssignment($courseId, $title, $description, $dueDate)
+    public function addAssignment($courseId, $title, $description, $dueDate, $filePath = null)
     {
-        $stmt = $this->conn->prepare("INSERT INTO assignments (course_id, title, description, due_date) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$courseId, $title, $description, $dueDate]);
+        $stmt = $this->conn->prepare("INSERT INTO assignments (course_id, title, description, due_date, file_path) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$courseId, $title, $description, $dueDate, $filePath]);
     }
+
 
     public function getAssignmentById($assignmentId)
     {
@@ -33,11 +34,12 @@ class Assignment
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updateAssignment($assignmentId, $title, $description, $dueDate)
+    public function updateAssignment($assignmentId, $title, $description, $dueDate, $filePath = null)
     {
-        $stmt = $this->conn->prepare("UPDATE assignments SET title = ?, description = ?, due_date = ? WHERE assignment_id = ?");
-        $stmt->execute([$title, $description, $dueDate, $assignmentId]);
+        $stmt = $this->conn->prepare("UPDATE assignments SET title = ?, description = ?, due_date = ?, file_path = ? WHERE assignment_id = ?");
+        $stmt->execute([$title, $description, $dueDate, $filePath, $assignmentId]);
     }
+
 
     public function deleteAssignment($assignmentId)
     {
