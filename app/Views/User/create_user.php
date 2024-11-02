@@ -4,15 +4,17 @@
         <form action="" method="POST">
             <div class="mb-3">
                 <label for="username" class="form-label">Tên đăng nhập:</label>
-                <input type="text" id="username" name="username" class="form-control" required>
+                <input type="text" id="username" name="username" class="form-control"
+                    value="<?= isset($username) ? htmlspecialchars($username) : '' ?>" required>
             </div>
 
-            <div class="mb-3">
+            <div class=" mb-3">
                 <label for="password" class="form-label">Mật khẩu:</label>
-                <input type="password" id="password" name="password" class="form-control" required>
+                <input type="password" id="password" name="password" class="form-control"
+                    value="<?= isset($password) ? htmlspecialchars($password) : '' ?>" required>
             </div>
 
-            <div class="mb-3">
+            <div class=" mb-3">
                 <label for="full_name" class="form-label">Họ và tên:</label>
                 <input type="text" id="full_name" name="full_name" class="form-control"
                     value="<?= isset($registrationData) ? htmlspecialchars($registrationData['full_name']) : '' ?>"

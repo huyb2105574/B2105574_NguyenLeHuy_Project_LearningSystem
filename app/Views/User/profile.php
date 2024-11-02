@@ -1,13 +1,13 @@
 <?php if (isset($_SESSION['success_message'])) : ?>
-<div class="alert alert-success">
-    <?php echo $_SESSION['success_message'];
+    <div class="alert alert-success">
+        <?php echo $_SESSION['success_message'];
         unset($_SESSION['success_message']); ?>
-</div>
+    </div>
 <?php elseif (isset($_SESSION['error_message'])) : ?>
-<div class="alert alert-danger">
-    <?php echo $_SESSION['error_message'];
+    <div class="alert alert-danger">
+        <?php echo $_SESSION['error_message'];
         unset($_SESSION['error_message']); ?>
-</div>
+    </div>
 <?php endif; ?>
 
 
@@ -58,13 +58,13 @@
                 <div class="card-body">
                     <h5 class="card-title">Khóa học đã ghi danh</h5>
                     <?php if (!empty($coursesEnrollments)) : ?>
-                    <ul>
-                        <?php foreach ($coursesEnrollments as $course) : ?>
-                        <li><?php echo htmlspecialchars($course['course_name']); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
+                        <ul>
+                            <?php foreach ($coursesEnrollments as $course) : ?>
+                                <li><?php echo htmlspecialchars($course['course_name']); ?></li>
+                            <?php endforeach; ?>
+                        </ul>
                     <?php else : ?>
-                    <p>Không có khóa học nào.</p>
+                        <p>Không có khóa học nào.</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -151,3 +151,21 @@
 
     </div>
 </div>
+
+<script>
+    window.onload = function() {
+
+        var errorMessage = document.getElementById('error-message');
+        if (errorMessage) {
+            setTimeout(function() {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+        var successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            setTimeout(function() {
+                successMessage.style.display = 'none';
+            }, 5000);
+        }
+    };
+</script>

@@ -36,6 +36,7 @@ class UserController
                 $_SESSION['user'] = [
                     'user_id' => $user['user_id'],
                     'username' => $user['username'],
+                    'password' => $user['password'],
                     'email' => $user['email'],
                     'full_name' => $user['full_name'],
                     'phone_number' => $user['phone_number'],
@@ -55,6 +56,8 @@ class UserController
             require_once __DIR__ . '/../Views/User/login.php';
         }
     }
+
+
 
 
     public function createUser()
@@ -86,6 +89,26 @@ class UserController
         $this->renderLayout($content, $userData);
     }
 
+    private function generateUniqueUsername($role)
+    {
+
+        $existingUsernames = $this->userModel->getAllUsernamesByRole($role);
+
+
+        $prefix = strtolower($role);
+        $number = 1;
+        $username = $prefix . $number;
+
+
+        while (in_array($username, $existingUsernames)) {
+            $number++;
+            $username = $prefix . $number;
+        }
+
+        return $username;
+    }
+
+
     public function createUserWithRegistration($registrationId = null)
     {
         // Kiểm tra quyền truy cập
@@ -103,8 +126,13 @@ class UserController
                 return;
             }
         }
+        $role = $registrationData['role'];
+
+        $username = $this->generateUniqueUsername($role);
+        $password = '123';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
             $username = $_POST['username'];
             $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
             $full_name = $_POST['full_name'];
@@ -118,10 +146,11 @@ class UserController
                 header('Location: /user/list');
             } else {
                 echo "Error creating user!";
+                header('Location: /user/list');
             }
         } else {
             $userData = $this->getUserData();
-            $content = $this->renderView('User/create_user.php', ['userData' => $userData,  'registrationData' => $registrationData]);
+            $content = $this->renderView('User/create_user.php', ['userData' => $userData,  'registrationData' => $registrationData, 'username' => $username, 'password' => $password]);
             $this->renderLayout($content, $userData);
         }
     }
@@ -138,18 +167,18 @@ class UserController
 
     public function deleteUser($id = null)
     {
-        // Kiểm tra xem ID có tồn tại không
         if ($id === null) {
-            echo "ID không tồn tại.";
-            return;
+            $_SESSION['error'] = "ID không tồn tại.";
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit;
         }
 
-        // Gọi model để xóa người dùng
         if ($this->userModel->deleteUser($id)) {
             header("Location: /user/list");
-            exit; // Kết thúc xử lý sau khi chuyển hướng
+            exit;
         } else {
-            echo "Xóa người dùng thất bại.";
+            $_SESSION['error'] = "Xóa người dùng thất bại.";
+            header("Location: " . $_SERVER['HTTP_REFERER']);
         }
     }
 
@@ -165,11 +194,12 @@ class UserController
             $date_of_birth = $_POST['date_of_birth'];
             $role = $_POST['role'];
 
-            // Gọi hàm cập nhật người dùng
             if ($this->userModel->updateUser($id, $username, $full_name, $email, $role, $phone_number, $address, $date_of_birth)) {
                 header('Location: /user/list');
             } else {
-                echo "Cập nhật thất bại!";
+                $_SESSION['error'] = "Cập nhật thất bại!";
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit;
             }
         } else {
             // Lấy thông tin người dùng cần chỉnh sửa
@@ -212,6 +242,37 @@ class UserController
             exit();
         }
     }
+
+    public function changePasswordFirstTime($id)
+    {
+        $user = $this->userModel->getUserById($id);
+
+        if ($user && password_verify('123', $user['password'])) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $newPassword = $_POST['new_password'];
+                $confirmPassword = $_POST['confirm_password'];
+                if ($newPassword !== $confirmPassword) {
+                    $_SESSION['error_message'] = 'Mật khẩu xác nhận không khớp.';
+                    header('Location: /change_password_first_time/' . $id);
+                    exit();
+                }
+                $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                $this->userModel->updatePassword($id, $hashedPassword);
+                $_SESSION['success_message'] = 'Đổi mật khẩu thành công.';
+                header('Location: /home');
+                exit();
+            }
+
+
+            $userData = $this->getUserData();
+            $content = $this->renderView('User/change_password_first_time.php', ['userData' => $userData]);
+            $this->renderLayout($content, $userData);
+        } else {
+            header('Location: /profile');
+            exit();
+        }
+    }
+
 
     public function updateInfo($id)
     {

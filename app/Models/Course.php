@@ -135,4 +135,13 @@ class Course
         $stmt->execute([$course_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function searchCourses($query)
+    {
+        $query = "%" . $query . "%";
+        $stmt = $this->conn->prepare("SELECT course_id, course_name FROM courses WHERE course_name LIKE ?");
+        $stmt->execute([$query]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

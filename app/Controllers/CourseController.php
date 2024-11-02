@@ -251,6 +251,14 @@ class CourseController
         exit();
     }
 
+    public function search()
+    {
+        $query = isset($_GET['q']) ? $_GET['q'] : '';
+        $courses = $this->courseModel->searchCourses($query);
+        header('Content-Type: application/json');
+        echo json_encode($courses);
+    }
+
     private function renderView($view, $data = [])
     {
         extract($data);

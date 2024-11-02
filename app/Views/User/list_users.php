@@ -1,3 +1,9 @@
+<?php
+if (isset($_SESSION['error'])) {
+    echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
+    unset($_SESSION['error']);
+}
+?>
 <div class="container mt-4">
     <h2 class="mb-4">Danh sách tài khoản</h2>
 
@@ -70,8 +76,10 @@
                     <td><?= $registration['submitted_at'] ?></td>
                     <td><?= $registration['status'] ?></td> <!-- Hiển thị tình trạng -->
                     <td>
-                        <a href="/user/create/<?= $registration['registration_id'] ?>" class="btn btn-success btn-sm">Tạo
-                            tài khoản</a>
+                        <?php if ($registration['status'] === 'pending'): ?>
+                            <a href="/user/create/<?= $registration['registration_id'] ?>" class="btn btn-success btn-sm">Tạo
+                                tài khoản</a>
+                        <?php endif; ?>
                         <a href="/registration/delete/<?= $registration['registration_id'] ?>" class="btn btn-danger btn-sm"
                             onclick="return confirm('Bạn có chắc chắn muốn xóa đơn đăng ký này không?')">Xóa</a>
                     </td>
@@ -80,3 +88,14 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    window.onload = function() {
+        var errorMessage = document.getElementById('error-message');
+        if (errorMessage) {
+            setTimeout(function() {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+    };
+</script>

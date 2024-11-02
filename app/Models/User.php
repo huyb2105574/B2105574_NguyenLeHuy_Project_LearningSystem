@@ -57,6 +57,14 @@ class User
         return $stmt->execute();
     }
 
+    public function getAllUsernamesByRole($role)
+    {
+        $stmt = $this->conn->prepare("SELECT username FROM users WHERE role = :role");
+        $stmt->execute(['role' => $role]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+
     public function getAllUsers()
     {
         $query = "SELECT * FROM " . $this->table;

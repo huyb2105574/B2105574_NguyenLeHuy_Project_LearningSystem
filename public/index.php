@@ -10,7 +10,6 @@ use App\Controllers\SubmissionController;
 use App\Controllers\RegistrationController;
 
 
-require_once __DIR__ . "/../app/Controllers/RegistrationControlller.php";
 // Tạo phiên làm việc
 session_start();
 
@@ -39,6 +38,8 @@ switch ($controller) {
     case 'courses':
         if ($action == 'index') {
             $siteController->courses();
+        } elseif ($action == 'search') {
+            $courseController->search();
         } elseif ($action == 'show' && $id) {
             $courseController->show($id);
         } elseif ($action == 'edit' && $id) {
@@ -99,6 +100,8 @@ switch ($controller) {
             $userController->deleteUser($id);
         } elseif ($action == 'change_password' && $id) {
             $userController->changePassword($id);
+        } elseif ($action == 'change_password_first_time' && $id) {
+            $userController->changePasswordFirstTime($id);
         } elseif ($action == 'update_info' && $id) {
             $userController->updateInfo($id);
         } else {

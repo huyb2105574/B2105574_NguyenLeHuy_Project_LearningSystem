@@ -29,6 +29,14 @@ class SiteController
             header("Location: /login");
             exit;
         }
+
+        $userId = $_SESSION['user']['user_id'];
+        $user = $this->userModel->getUserById($userId);
+
+        if (password_verify('123', $user['password'])) {
+            header("Location: /user/change_password_first_time/{$userId}");
+            exit;
+        }
         $userData = $this->getUserData();
         $courses = $this->courseModel->getAllCourses();
         $lecturers = $this->userModel->getAllLecturers();

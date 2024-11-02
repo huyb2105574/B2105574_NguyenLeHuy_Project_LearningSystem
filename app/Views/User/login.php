@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập</title>
-    <!-- Liên kết Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -48,9 +47,12 @@
                     <label for="password" class="form-label">Mật khẩu</label>
                     <input type="password" name="password" id="password" class="form-control"
                         placeholder="Nhập mật khẩu" required>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showPassword">
+                        <label class="form-check-label" for="showPassword">Hiện mật khẩu</label>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
-
             </form>
             <div class="mt-3 text-center">
                 <p>Bạn chưa có tài khoản? <a href="/registration/register">Đăng ký ngay!</a></p>
@@ -58,11 +60,16 @@
         </div>
     </div>
 
-    <!-- Liên kết Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Hiện/ẩn mật khẩu
+            $('#showPassword').on('change', function() {
+                const passwordField = $('#password');
+                passwordField.attr('type', this.checked ? 'text' : 'password');
+            });
+
             $('#loginForm').on('submit', function(event) {
                 event.preventDefault(); // Ngăn form gửi yêu cầu truyền thống
 
