@@ -10,6 +10,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            padding-top: 80px;
         }
 
         /* Thanh điều hướng */
@@ -71,8 +72,7 @@
 <body>
     <header>
         <div class="container">
-            <nav class="navbar navbar-expand-lg">
-                <!-- Logo bên trái -->
+            <nav class="navbar navbar-expand-lg fixed-top">
                 <a class="navbar-brand" href="/home">Learning</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

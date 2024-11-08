@@ -29,7 +29,10 @@
     </div>
     <hr>
     <?php if ($isEnrolled || ($userData['role'] === 'admin' || $userData['user_id'] === $course['lecturer_id'])): ?>
-        <a href="/lecture/create/<?php echo $course['course_id']; ?>" class="btn btn-success mb-3">Thêm Bài Giảng</a>
+        <?php if ($userData['role'] === 'admin' || $userData['user_id'] === $course['lecturer_id']): ?>
+            <!-- Nút Thêm Bài Giảng -->
+            <a href="/lecture/create/<?php echo $course['course_id']; ?>" class="btn btn-success mb-3">Thêm Bài Giảng</a>
+        <?php endif; ?>
         <h3>Bài giảng</h3>
         <ul class="list-group">
             <?php if (!empty($lectures)): ?>
@@ -60,7 +63,10 @@
 
         <hr>
 
-        <a href="/assignment/create/<?php echo $course['course_id']; ?>" class="btn btn-success mb-3">Thêm Bài Tập</a>
+        <?php if ($userData['role'] === 'admin' || $userData['user_id'] === $course['lecturer_id']): ?>
+            <!-- Nút Thêm Bài Tập -->
+            <a href="/assignment/create/<?php echo $course['course_id']; ?>" class="btn btn-success mb-3">Thêm Bài Tập</a>
+        <?php endif; ?>
         <h3>Bài tập</h3>
         <ul class="list-group">
             <?php if (!empty($assignments)): ?>
@@ -92,7 +98,7 @@
 
         <hr>
 
-        <?php if (isset($userData['role']) && ($userData['role'] === 'admin' || $userData['role'] === 'lecture')): ?>
+        <?php if (isset($userData['role']) && ($userData['role'] === 'admin' || $userData['user_id'] === $course['lecturer_id'])): ?>
             <h3>Học viên đã ghi danh</h3>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered text-center">
@@ -137,6 +143,7 @@
             </div>
         <?php endif; ?>
     <?php endif; ?>
+
 
     <a href="/courses" class="btn btn-primary">Trở lại danh sách khóa học</a>
 </div>
