@@ -118,23 +118,56 @@ class Course
 
     public function rejectEnrollment($enrollment_id)
     {
-        $stmt = $this->conn->prepare("UPDATE enrollments SET status = 'rejected' WHERE enrollment_id = :enrollment_id");
+        $stmt = $this->conn->prepare("DELETE FROM enrollments WHERE enrollment_id = :enrollment_id");
         $stmt->bindParam(':enrollment_id', $enrollment_id);
         return $stmt->execute();
     }
 
 
+
     public function getStudentsByCourse($course_id)
     {
         $stmt = $this->conn->prepare("
-            SELECT users.user_id, users.full_name, users.email, enrollments.status, enrollments.enrollment_id 
-            FROM enrollments 
-            JOIN users ON enrollments.student_id = users.user_id 
-            WHERE enrollments.course_id = ?
-        ");
+        SELECT users.user_id, users.full_name, users.email,enrollments.status, enrollments.enrollment_id 
+        FROM enrollments 
+        JOIN users ON enrollments.student_id = users.user_id 
+        WHERE enrollments.course_id = ?
+    ");
         $stmt->execute([$course_id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmtTotalAssignments = $this->conn->prepare("
+        SELECT COUNT(*) as total 
+        FROM assignments 
+        WHERE course_id = ?
+    ");
+        $stmtTotalAssignments->execute([$course_id]);
+        $totalAssignments = $stmtTotalAssignments->fetch(PDO::FETCH_ASSOC)['total'];
+        foreach ($students as &$student) {
+            $submittedAssignments = 0;
+
+            if ($totalAssignments > 0) {
+                $stmtSubmitted = $this->conn->prepare("
+                SELECT COUNT(*) as submitted 
+                FROM submissions 
+                INNER JOIN assignments ON submissions.assignment_id = assignments.assignment_id 
+                WHERE assignments.course_id = ? AND submissions.student_id = ?
+            ");
+                $stmtSubmitted->execute([$course_id, $student['user_id']]);
+                $submittedAssignments = $stmtSubmitted->fetch(PDO::FETCH_ASSOC)['submitted'] ?? 0;
+            }
+
+            $student['progress'] = $totalAssignments > 0
+                ? round(($submittedAssignments / $totalAssignments) * 100, 2)
+                : 0;
+
+            $student['statusstudy'] = ($submittedAssignments == $totalAssignments && $totalAssignments > 0)
+                ? 'Hoàn thành'
+                : 'Đang học';
+        }
+
+        return $students;
     }
+
 
     public function searchCourses($query)
     {

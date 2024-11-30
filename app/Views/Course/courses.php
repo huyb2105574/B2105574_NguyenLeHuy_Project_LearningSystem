@@ -6,10 +6,7 @@
     ?>
 <?php endif; ?>
 
-<?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
-    <a href="/courses/create" class="btn btn-primary">Tạo khóa học</a>
-<?php endif; ?>
-<h1>Danh sách khóa học</h1>
+<h1 class="text-center font-weight-bold mb-4">Danh sách khóa học</h1>
 <div class="row">
     <?php foreach ($courses as $course): ?>
         <div class="col-md-4">
@@ -17,11 +14,8 @@
                 <img src="uploads/<?php echo htmlspecialchars($course['image_path']); ?>" class="card-img-top"
                     alt="Hình minh họa cho khóa học" style="height: 200px; object-fit: cover;">
                 <div class="card-body">
-                    <h5 class="card-title"><?php echo htmlspecialchars($course['course_name']); ?></h5>
+                    <h5 class="card-title font-weight-bold"><?php echo htmlspecialchars($course['course_name']); ?></h5>
                     <p class="card-text">Giảng viên: <?php echo htmlspecialchars($course['lecturer_name']); ?></p>
-                    <p class="card-text">Ngày bắt đầu: <?php echo htmlspecialchars($course['start_date']); ?></p>
-                    <p class="card-text">Ngày kết thúc: <?php echo htmlspecialchars($course['end_date']); ?></p>
-                    <p class="card-text">Mô tả:<?php echo htmlspecialchars($course['description']); ?></p>
                     <a href="/courses/show/<?php echo $course['course_id']; ?>" class="btn btn-info">Xem chi tiết</a>
                 </div>
                 <?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
@@ -35,3 +29,11 @@
         </div>
     <?php endforeach; ?>
 </div>
+<?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
+    <a href="/courses/create" class="btn btn-primary">Tạo khóa học</a>
+<?php endif; ?>
+<style>
+    .font-weight-bold {
+        font-weight: bold;
+    }
+</style>

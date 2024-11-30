@@ -10,52 +10,87 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding-top: 80px;
+            padding-top: 0px;
         }
 
-        /* Thanh điều hướng */
-        .navbar {
-            background-color: #fff;
-            padding: 10px 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Tăng kích thước logo */
-        .navbar-brand img {
-            height: 60px;
-            margin-right: 10px;
+        .navbar-top {
+            background-color: #0dcaf0;
+            padding: 5px 20px;
         }
 
         .navbar-brand {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
-            color: #333;
-            display: flex;
-            align-items: center;
+            color: #fff;
+            display: inline-block;
         }
 
-        /* Menu items */
+
+        .navbar-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ddd;
+            display: inline-block;
+            text-align: center;
+            line-height: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .navbar-bottom {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
         .navbar-nav .nav-link {
             color: #333 !important;
             font-size: 1rem;
             font-weight: bold;
-            text-transform: uppercase;
             padding: 0 15px;
             position: relative;
         }
 
         .navbar-nav .nav-link:hover {
-            color: #555 !important;
+            color: #0dcaf0 !important;
         }
 
-        /* Tìm kiếm */
-        .suggestions {
-            border: 1px solid #ccc;
-            background: white;
-            z-index: 1000;
-            max-height: 150px;
-            overflow-y: auto;
+        .user-info {
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar-search {
+            position: relative;
+            width: 300px;
+        }
+
+        .navbar-search input {
             width: 100%;
+            padding: 5px 10px;
+        }
+
+        .navbar-avatar {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            right: -100;
+            top: 100%;
+            min-width: 200px;
+            display: none;
+        }
+
+        .suggestions {
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            width: 100%;
+            z-index: 9999;
+            display: none;
         }
 
         .suggestion-item {
@@ -64,7 +99,19 @@
         }
 
         .suggestion-item:hover {
-            background-color: #f0f0f0;
+            background-color: #f1f1f1;
+        }
+
+        .logout-link {
+            margin-left: 10px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .footer {
+            background-color: #0dcaf0;
+            font-weight: bold;
+            color: #fff;
         }
     </style>
 </head>
@@ -72,42 +119,42 @@
 <body>
     <header>
         <div class="container">
-            <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="navbar-top d-flex justify-content-between">
                 <a class="navbar-brand" href="/home">Learning</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                    <ul class="navbar-nav">
+                <?php if (isset($userData['full_name'])): ?>
+                    <div class="user-info">
+                        <div class="navbar-avatar">
+                            <?= strtoupper(substr($userData['full_name'], 0, 1)) ?>
+                        </div>
+                        <div class="user-name"><?= $userData['full_name'] ?></div>
+                        <a href="/logout" class="logout-link">Đăng xuất</a>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <nav class="navbar navbar-expand-lg navbar-bottom">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <!-- Thay mx-auto thành me-auto để căn trái -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/courses" id="courses-link">Khóa học</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/profile" id="profile-link">Thông tin cá nhân</a>
+                        </li>
                         <?php if (isset($userData['role']) && $userData['role'] === 'admin'): ?>
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="/user">Quản lý tài khoản</a>
-                            </li>
-                        <?php endif; ?>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/courses">Trang Chủ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/profile">Hồ Sơ</a>
-                        </li>
-                        <?php if (isset($userData['full_name'])): ?>
-                            <li class="nav-item">
-                                <span class="nav-link text-white">Chào,
-                                    <?php echo htmlspecialchars($userData['full_name']); ?>!</span>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="/logout">Đăng Xuất</a>
+                                <a class="nav-link" href="/user" id="user-link">Quản lý tài khoản</a>
                             </li>
                         <?php endif; ?>
                     </ul>
                 </div>
-                <div class="ml-auto position-relative">
+                <div class="navbar-search">
                     <input type="text" id="search-input" class="form-control" placeholder="Tìm khóa học..."
                         autocomplete="off">
-                    <div id="suggestions" class="suggestions position-absolute" style="display:none;"></div>
+                    <div id="suggestions" class="suggestions"></div>
                 </div>
             </nav>
+
         </div>
     </header>
 
@@ -117,7 +164,7 @@
         </div>
     </main>
 
-    <footer class="bg-light text-center py-3 mt-4">
+    <footer class="text-center py-3 mt-4 footer">
         <p>&copy; 2024 Hệ thống Quản lý Học Tập</p>
     </footer>
 

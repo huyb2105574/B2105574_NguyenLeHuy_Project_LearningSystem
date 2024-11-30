@@ -20,8 +20,13 @@ class Submission
         $stmt->bindParam(':assignment_id', $assignmentId);
         $stmt->bindParam(':student_id', $studentId);
         $stmt->bindParam(':file_path', $filePath);
-        return $stmt->execute();
+
+        if ($stmt->execute()) {
+            return $this->updateProgress($assignmentId, $studentId);
+        }
+        return false;
     }
+
 
     public function getSubmissionById($submissionId)
     {
@@ -43,11 +48,17 @@ class Submission
 
     public function deleteSubmission($submissionId)
     {
+        $submission = $this->getSubmissionById($submissionId);
+
         $query = "DELETE FROM submissions WHERE submission_id = :submission_id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':submission_id', $submissionId);
-        return $stmt->execute();
+        if ($stmt->execute()) {
+            return $this->updateProgress($submission['assignment_id'], $submission['student_id']);
+        }
+        return false;
     }
+
 
     public function getSubmissionByAssignmentAndUser($assignmentId, $studentId)
     {
@@ -69,5 +80,31 @@ class Submission
         ");
         $stmt->execute([$assignmentId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function updateProgress($assignmentId, $studentId)
+    {
+        $query = "
+        UPDATE enrollments
+        SET progress = (
+            SELECT COUNT(DISTINCT submissions.assignment_id) * 100 / COUNT(assignments.assignment_id)
+            FROM assignments
+            LEFT JOIN submissions ON assignments.assignment_id = submissions.assignment_id
+            WHERE assignments.course_id = (
+                SELECT course_id
+                FROM assignments
+                WHERE assignment_id = :assignment_id
+            ) AND submissions.student_id = :student_id
+        )
+        WHERE course_id = (
+            SELECT course_id
+            FROM assignments
+            WHERE assignment_id = :assignment_id
+        ) AND student_id = :student_id
+    ";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':assignment_id', $assignmentId);
+        $stmt->bindParam(':student_id', $studentId);
+        return $stmt->execute();
     }
 }

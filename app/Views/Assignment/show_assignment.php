@@ -1,6 +1,5 @@
 <div class="container mt-4">
-    <h2>Chi Tiết Bài Tập</h2>
-    <p><strong>Tiêu đề:</strong> <?php echo htmlspecialchars($assignment['title']); ?></p>
+    <h2 class="border-center"><?php echo htmlspecialchars($assignment['title']); ?></h2>
     <p><strong>Mô tả:</strong> <?php echo nl2br(htmlspecialchars($assignment['description'])); ?></p>
     <p><strong>Ngày hết hạn:</strong> <?php echo htmlspecialchars($assignment['due_date']); ?></p>
     <p><strong>Ngày tạo:</strong> <?php echo htmlspecialchars($assignment['created_at']); ?></p>
@@ -74,3 +73,10 @@
         </table>
     <?php endif; ?>
 </div>
+
+<style>
+    .border-center {
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
