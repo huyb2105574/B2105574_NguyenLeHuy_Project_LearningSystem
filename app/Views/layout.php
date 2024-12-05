@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Học Tập</title>
+    <link rel="icon" href="/uploads/favicon.ico" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -120,7 +121,9 @@
     <header>
         <div class="container">
             <div class="navbar-top d-flex justify-content-between">
-                <a class="navbar-brand" href="/home">Learning</a>
+                <div>
+                    <a class="navbar-brand" href="/home">Learning</a>
+                </div>
                 <?php if (isset($userData['full_name'])): ?>
                     <div class="user-info">
                         <div class="navbar-avatar">

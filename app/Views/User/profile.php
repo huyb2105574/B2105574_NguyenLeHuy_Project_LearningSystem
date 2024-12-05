@@ -35,7 +35,13 @@
                     </p>
                     </p>
                     <p><strong>Ngày sinh:</strong>
-                        <?php echo htmlspecialchars($userData['date_of_birth'] ?? 'Không có'); ?></p>
+                        <?php
+                        if (!empty($userData['date_of_birth'])) {
+                            echo date('d/m/Y', strtotime($userData['date_of_birth']));
+                        } else {
+                            echo 'Không có';
+                        }
+                        ?>
 
                     <div class="card mt-4">
                         <div class="card-body">

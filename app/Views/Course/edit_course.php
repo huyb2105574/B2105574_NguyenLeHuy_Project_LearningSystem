@@ -17,8 +17,15 @@
 
         <div class="form-group">
             <label for="lecturer_id">Giảng Viên:</label>
-            <input type="text" class="form-control" name="lecturer_id"
-                value="<?php echo htmlspecialchars($course['lecturer_id']); ?>" required>
+            <select class="form-control" name="lecturer_id" required>
+                <option value="">--Chọn giảng viên--</option>
+                <?php foreach ($lecturers as $lecturer): ?>
+                    <option value="<?= $lecturer['user_id']; ?>"
+                        <?php echo ($lecturer['user_id'] == $course['lecturer_id']) ? 'selected' : ''; ?>>
+                        <?= htmlspecialchars($lecturer['full_name']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <div class="form-group">

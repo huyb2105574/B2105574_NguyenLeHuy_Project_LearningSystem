@@ -13,17 +13,22 @@
 
     <div class="form-group">
         <label for="lecturer_id">Giảng viên:</label>
-        <input type="text" id="lecturer_id" name="lecturer_id" class="form-control">
+        <select id="lecturer_id" name="lecturer_id" class="form-control" required>
+            <option value="">Chọn giảng viên</option>
+            <?php foreach ($lecturers as $lecturer): ?>
+                <option value="<?= $lecturer['user_id'] ?>"><?= $lecturer['full_name'] ?></option>
+            <?php endforeach; ?>
+        </select>
     </div>
 
     <div class="form-group">
         <label for="start_date">Ngày bắt đầu:</label>
-        <input type="date" id="start_date" name="start_date" class="form-control">
+        <input type="date" id="start_date" name="start_date" class="form-control" required>
     </div>
 
     <div class="form-group">
         <label for="end_date">Ngày kết thúc:</label>
-        <input type="date" id="end_date" name="end_date" class="form-control">
+        <input type="date" id="end_date" name="end_date" class="form-control" required>
     </div>
 
     <div class="form-group">

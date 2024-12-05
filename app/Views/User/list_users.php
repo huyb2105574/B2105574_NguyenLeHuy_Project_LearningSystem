@@ -70,7 +70,7 @@
                                 </td>
                                 <td><?= $user['phone_number'] ?></td>
                                 <td><?= $user['address'] ?></td>
-                                <td><?= $user['date_of_birth'] ?></td>
+                                <td><?= date('d/m/Y', strtotime($user['date_of_birth'])) ?></td>
                                 <td>
                                     <a href="/user/edit/<?= $user['user_id'] ?>" class="btn btn-primary btn-sm">Chỉnh
                                         sửa</a>
@@ -110,7 +110,7 @@
                                 <td><?= $registration['email'] ?></td>
                                 <td><?= $registration['phone_number'] ?></td>
                                 <td><?= $registration['address'] ?></td>
-                                <td><?= $registration['date_of_birth'] ?></td>
+                                <td><?= date('d/m/Y', strtotime($registration['date_of_birth'])) ?></td>
                                 <td>
                                     <?php
                                     switch ($registration['role']) {
@@ -129,7 +129,7 @@
                                     }
                                     ?>
                                 </td>
-                                <td><?= $registration['submitted_at'] ?></td>
+                                <td><?= date('d/m/Y H:i', strtotime($registration['submitted_at'])) ?></td>
                                 <td>
                                     <?php
                                     switch ($registration['status']) {

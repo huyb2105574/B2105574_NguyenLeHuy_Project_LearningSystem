@@ -34,8 +34,8 @@ class CourseController
             return;
         }
 
-        // Nếu là Admin, hiển thị trang tạo khóa học
-        $content = $this->renderView('Course/create_course.php', ['userData' => $userData]);
+        $lecturers = $this->userModel->getAllLecturers();
+        $content = $this->renderView('Course/create_course.php', ['userData' => $userData, 'lecturers' => $lecturers]);
         $this->renderLayout($content, $userData);
     }
 
@@ -126,8 +126,8 @@ class CourseController
             die('Khóa học không tồn tại.');
         }
 
-        // Trả về view để hiển thị form chỉnh sửa và truyền userData vào view
-        $content = $this->renderView('Course/edit_course.php', ['course' => $course, 'userData' => $userData]);
+        $lecturers = $this->userModel->getAllLecturers();
+        $content = $this->renderView('Course/edit_course.php', ['course' => $course, 'userData' => $userData, 'lecturers' => $lecturers]);
         $this->renderLayout($content, $userData);
     }
 
