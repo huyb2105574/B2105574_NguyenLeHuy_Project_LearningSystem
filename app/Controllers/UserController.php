@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Config\Database;
 use App\Models\User;
-
+use App\Services\MailService;
 use App\Models\Registration;
 
 class UserController
@@ -111,13 +111,11 @@ class UserController
 
     public function createUserWithRegistration($registrationId = null)
     {
-        // Kiểm tra quyền truy cập
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
             echo "Access denied!";
             return;
         }
 
-        // Lấy thông tin từ đơn đăng ký nếu có registrationId
         $registrationData = null;
         if ($registrationId !== null) {
             $registrationData = $this->registrationModel->getRegistrationById($registrationId);
@@ -126,13 +124,12 @@ class UserController
                 return;
             }
         }
-        $role = $registrationData['role'];
 
+        $role = $registrationData['role'];
         $username = $this->generateUniqueUsername($role);
         $password = '123';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
             $username = $_POST['username'];
             $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
             $full_name = $_POST['full_name'];
@@ -141,8 +138,22 @@ class UserController
             $address = $_POST['address'];
             $date_of_birth = $_POST['date_of_birth'];
             $role = $_POST['role'];
+
             if ($this->userModel->createUser($username, $password, $full_name, $email, $role, $phone_number, $address, $date_of_birth, $registrationId)) {
                 $this->registrationModel->approveRegistration($registrationId);
+
+                // Gửi email
+                $mailService = new MailService();
+                $subject = "Account Created";
+                $body = "
+                    <h1>Xin chào, {$full_name}</h1>
+                    <p>Tài khoản của bạn đã được tạo thành công trên hệ thống.</p>
+                    <p><strong>Tên đăng nhập:</strong> {$username}</p>
+                    <p><strong>Mật khẩu:</strong> 123 (vui lòng đổi mật khẩu sau khi đăng nhập)</p>
+                    <p><a href='http://localhost:8000/login'>Đăng nhập ngay</a></p>
+                ";
+                $mailService->sendEmail($email, $subject, $body);
+
                 header('Location: /user/list');
             } else {
                 echo "Error creating user!";
